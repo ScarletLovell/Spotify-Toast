@@ -1,0 +1,12 @@
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\bin\Release\ToastTest.exe.config
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\bin\Release\ToastTest.exe
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\bin\Release\ToastTest.pdb
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\bin\Release\Newtonsoft.Json.dll
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\bin\Release\SpotifyAPI.dll
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\bin\Release\Newtonsoft.Json.xml
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\bin\Release\SpotifyAPI.xml
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\obj\Release\ToastTest.Form1.resources
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\obj\Release\ToastTest.Properties.Resources.resources
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\obj\Release\ToastTest.csproj.GenerateResource.Cache
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\obj\Release\ToastTest.exe
+C:\Users\Anthony\Desktop\Scripts\C#\ToastTest\ToastTest\obj\Release\ToastTest.pdb
