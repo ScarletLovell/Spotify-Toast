@@ -6,7 +6,7 @@ Some of the applications that are used for spotify similar to this aren't update
 
 # Imagery
 
-![image](https://i.imgur.com/niacrDL.png)
+![image](https://i.imgur.com/zY8eG5p.png)
 
 > [gif](https://i.imgur.com/DD6BoRM.gifv) (because apparently github doesn't support videos)
 
