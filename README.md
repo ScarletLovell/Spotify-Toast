@@ -1,4 +1,5 @@
 # Spotify-Toast
+![image](https://i.imgur.com/ngOUto9.png)<br/>
 An always on-top toast application for your current song, artist, time, and album art
 
 # Why did I make this?
@@ -10,11 +11,11 @@ You can also access the Options menu by clicking the version # in the bottom rig
 If your settings somehow miraculously dissapear, just delete the config
 
 # Imagery
-![image](https://i.imgur.com/zY8eG5p.png)<br/>
-![image](https://i.imgur.com/jLou2uB.png)<br/>
-![image](https://i.imgur.com/ngOUto9.png)<br/>
-![image](https://i.imgur.com/vsiznxc.png)<br/>
-[click me for gif](https://i.imgur.com/DD6BoRM.gifv) (because apparently github doesn't support videos)
+* https://i.imgur.com/zY8eG5p.png
+* https://i.imgur.com/jLou2uB.png
+* https://i.imgur.com/ngOUto9.png
+* https://i.imgur.com/vsiznxc.png
+* https://i.imgur.com/DD6BoRM.gifv
 
 # Todo
 * Make an option for an actual toast to show up on screen when song changes
