@@ -1,5 +1,5 @@
 # Spotify-Toast
-![image](https://i.imgur.com/ngOUto9.png)<br/>
+![image](https://i.imgur.com/VtcgmLB.png)<br/>
 An always on-top toast application for your current song, artist, time, and album art
 
 # Why did I make this?
