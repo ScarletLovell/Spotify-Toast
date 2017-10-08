@@ -24,7 +24,7 @@ If your settings somehow miraculously dissapear, just delete the config
 * Fixing any [issues](https://github.com/Anthonyrules144/Spotify-Toast/issues) that the application has
 
 #
-If you have an issue with this, please post in the [issues](https://github.com/Anthonyrules144/Spotify-Toast/issues) tab
+If you have an issue with this, please post in the [issues](https://github.com/Anthonyrules144/Spotify-Toast/issues) tab 
 
 If you would like to download the latest exe, it can be found [in the downloads](https://github.com/Anthonyrules144/Spotify-Toast/releases) section
 
