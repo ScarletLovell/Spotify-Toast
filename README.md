@@ -4,10 +4,16 @@ An always on-top toast application for your current song, artist, time, and albu
 # Why did I make this?
 Some of the applications that are used for spotify similar to this aren't updated to todays standards. So I figured, why not make my own.
 
+# How to use
+Simple! Just open the application, and it's ready to go as long as you have spotify open! <br/>
+You can also access the Options menu by clicking the version # in the bottom right <br/>
+If your settings somehow miraculously dissapear, just delete the config
+
 # Imagery
-
-![image](https://i.imgur.com/zY8eG5p.png)
-
+![image](https://i.imgur.com/zY8eG5p.png)<br/>
+![image](https://i.imgur.com/jLou2uB.png)<br/>
+![image](https://i.imgur.com/ngOUto9.png)<br/>
+![image](https://i.imgur.com/vsiznxc.png)<br/>
 [click me for gif](https://i.imgur.com/DD6BoRM.gifv) (because apparently github doesn't support videos)
 
 #
