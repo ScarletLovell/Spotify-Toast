@@ -1,6 +1,14 @@
-# Spotify-Toast ![travis](https://api.travis-ci.org/Anthonyrules144/Spotify-Toast.png?branch=master)
+# Spotify-Toast
 ![image](https://i.imgur.com/VtcgmLB.png)<br/>
 An always on-top toast application for your current song, artist, time, and album art
+
+# Working
+| OS            | Debug/Release | Name     |
+|:-------------:|:-------------:|:--------:|
+| Windows x64   | Release       | Working  |
+| Windows x64   | Debug         | Working  |
+| Linux 16.04   | Debug         | ![travis](https://travis-ci.org/Anthonyrules144/Spotify-Toast.svg?branch=master)  |
+| Linux 14.04   | Debug         | ![travis](https://travis-ci.org/Anthonyrules144/Spotify-Toast.svg?branch=master)  |
 
 # Why did I make this?
 Some of the applications that are used for Spotify similar to this aren't updated to todays standards. So I figured, why not make my own.
