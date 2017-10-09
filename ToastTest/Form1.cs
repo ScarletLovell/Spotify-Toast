@@ -208,13 +208,13 @@ namespace ToastTest
                 return;
             if(newLocation != null)
                 this.Location = (Point) newLocation;
-            notify.Icon = Properties.Resources.spotify_icon;
+            /*notify.Icon = Properties.Resources.spotify_icon;
             notify.Text = "Spotify Toast";
             notify.BalloonTipText = "test";
             notify.BalloonTipTitle = "test2";
             notify.ShowBalloonTip(2000, "hi", "there", ToolTipIcon.Info);
             notify.Visible = true;
-            notify.DoubleClick += new EventHandler(this.notify_click);
+            notify.DoubleClick += new EventHandler(this.notify_click);*/
             _spotify.OnTrackChange += _spotify_OnTrackChange;
             _spotify.OnTrackTimeChange += _spotify_OnTrackTimeChange;
             _spotify.OnPlayStateChange += _spotify_OnPlayStateChange;
