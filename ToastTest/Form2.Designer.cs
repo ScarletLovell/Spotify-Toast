@@ -31,6 +31,9 @@
             this.checkBox_alwaysOnTop = new System.Windows.Forms.CheckBox();
             this.checkBox_changeColorWithSong = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.button_selectColor = new System.Windows.Forms.Button();
+            this.button_selectTextColor = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // checkBox_alwaysOnTop
@@ -76,12 +79,38 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // button_selectColor
+            // 
+            this.button_selectColor.BackColor = System.Drawing.Color.White;
+            this.button_selectColor.ForeColor = System.Drawing.Color.Black;
+            this.button_selectColor.Location = new System.Drawing.Point(188, 8);
+            this.button_selectColor.Name = "button_selectColor";
+            this.button_selectColor.Size = new System.Drawing.Size(100, 23);
+            this.button_selectColor.TabIndex = 6;
+            this.button_selectColor.Text = "Select Color";
+            this.button_selectColor.UseVisualStyleBackColor = false;
+            this.button_selectColor.Click += new System.EventHandler(this.button_selectColor_Click);
+            // 
+            // button_selectTextColor
+            // 
+            this.button_selectTextColor.BackColor = System.Drawing.Color.White;
+            this.button_selectTextColor.ForeColor = System.Drawing.Color.Black;
+            this.button_selectTextColor.Location = new System.Drawing.Point(188, 37);
+            this.button_selectTextColor.Name = "button_selectTextColor";
+            this.button_selectTextColor.Size = new System.Drawing.Size(100, 23);
+            this.button_selectTextColor.TabIndex = 7;
+            this.button_selectTextColor.Text = "Select Text Color";
+            this.button_selectTextColor.UseVisualStyleBackColor = false;
+            this.button_selectTextColor.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Options
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.ClientSize = new System.Drawing.Size(292, 269);
+            this.Controls.Add(this.button_selectTextColor);
+            this.Controls.Add(this.button_selectColor);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.checkBox_changeColorWithSong);
             this.Controls.Add(this.checkBox_alwaysOnTop);
@@ -99,5 +128,8 @@
         private System.Windows.Forms.CheckBox checkBox_alwaysOnTop;
         private System.Windows.Forms.CheckBox checkBox_changeColorWithSong;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Button button_selectColor;
+        private System.Windows.Forms.Button button_selectTextColor;
     }
 }

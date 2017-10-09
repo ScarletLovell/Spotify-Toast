@@ -89,12 +89,13 @@
             this.label3.Size = new System.Drawing.Size(45, 13);
             this.label3.TabIndex = 4;
             this.label3.Text = "version";
+            this.label3.Click += new System.EventHandler(this.label3_click);
             this.label3.MouseEnter += new System.EventHandler(this.label3_mouseEnter);
             this.label3.MouseLeave += new System.EventHandler(this.label3_mouseLeave);
-            this.label3.Click += new System.EventHandler(this.label3_click);
             // 
             // Form1
             // 
+            this.KeyDown += this.Form1_KeyDown;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
@@ -115,7 +116,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

@@ -3,12 +3,13 @@ using SpotifyAPI.Web.Enums;
 using System;
 using System.Windows.Forms;
 using System.Configuration;
+using System.Drawing;
 
 namespace ToastTest
 {
     static class Program
     {
-        public static string version = "1.1.7";
+        public static string version = "1.1.8";
 
         [STAThread]
         static void Main() {
@@ -20,8 +21,7 @@ namespace ToastTest
             if(confFile["webApi"] != null)
                 webApi = confFile["webApi"].Value;
             webApi = "don't do it";
-            if(webApi.Length <= 0) 
-            { // We're not gonna go through with this because it's not ready.
+            if(webApi.Length <= 0) { // We're not gonna go through with this because it's not ready.
                 DialogResult result = MessageBox.Show("Do you want to activate Spotify Web API? This will only show up once\n" +
                     "- This will open your browser each time the program is launched -", "Spotify Toast", MessageBoxButtons.YesNo);
                 bool res = (result == DialogResult.Yes ? true : false);

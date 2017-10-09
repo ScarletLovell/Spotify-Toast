@@ -45,7 +45,13 @@ namespace ToastTest
                 checkBox_alwaysOnTop.Checked = false;
             }
             if(confFile["changeColorWithSong"] != null && confFile["changeColorWithSong"].Value.ToLower().Equals("false")) {
+                updatingCheckBox_changeColorWithSong = true;
                 checkBox_changeColorWithSong.Checked = false;
+            } else {
+                button_selectColor.Enabled = false;
+                button_selectColor.Visible = false;
+                button_selectTextColor.Enabled = false;
+                button_selectTextColor.Visible = false;
             }
             Console.WriteLine("Options form loaded");
         }
@@ -59,6 +65,7 @@ namespace ToastTest
             oldForm1.Close();
         }
         private bool updatingCheckBox_alwaysOnTop = false;
+        private bool updatingCheckBox_changeColorWithSong = false;
         private void checkBox_alwaysOnTop_CheckedChanged(object sender, EventArgs e) {
             if(updatingCheckBox_alwaysOnTop) {
                 updatingCheckBox_alwaysOnTop = false;
@@ -76,12 +83,40 @@ namespace ToastTest
         }
 
         private void checkBox_changeColorWithSong_CheckedChanged(object sender, EventArgs e) {
+            if(updatingCheckBox_changeColorWithSong) {
+                updatingCheckBox_changeColorWithSong = false;
+                return;
+            }
             Console.WriteLine("Updated changeColorWithSong");
             Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
             if(confFile["changeColorWithSong"] != null)
-                configManager.AppSettings.Settings.Remove("alwaysOnTop");
+                configManager.AppSettings.Settings.Remove("changeColorWithSong");
             configManager.AppSettings.Settings.Add("changeColorWithSong", checkBox_changeColorWithSong.Checked ? "true" : "false");
+            configManager.Save(ConfigurationSaveMode.Modified);
+            resetWindows();
+        }
+
+        private void button_selectColor_Click(object sender, EventArgs e) {
+            colorDialog1.ShowDialog();
+            Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
+            if(confFile["defaultColor"] != null)
+                configManager.AppSettings.Settings.Remove("defaultColor");
+            Color colors = colorDialog1.Color;
+            configManager.AppSettings.Settings.Add("defaultColor", colors.R + " " + colors.G + " " + colors.B);
+            configManager.Save(ConfigurationSaveMode.Modified);
+            resetWindows();
+        }
+
+        private void button2_Click(object sender, EventArgs e) {
+            colorDialog1.ShowDialog();
+            Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
+            if(confFile["defaultTextColor"] != null)
+                configManager.AppSettings.Settings.Remove("defaultTextColor");
+            Color colors = colorDialog1.Color;
+            configManager.AppSettings.Settings.Add("defaultTextColor", colors.R + " " + colors.G + " " + colors.B);
             configManager.Save(ConfigurationSaveMode.Modified);
             resetWindows();
         }

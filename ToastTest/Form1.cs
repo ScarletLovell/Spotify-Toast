@@ -16,6 +16,9 @@ namespace ToastTest
     public partial class Form1 : Form
     {
         /// <summary>The way to make the app force ontop of all apps</summary>
+        interface IMouseClickable {
+            void HandleMouseClick(object sender, MouseEventArgs e);
+        }
         protected override CreateParams CreateParams
         { // https://stackoverflow.com/a/26607006 , I couldn't figure this out on my own.
             get {
@@ -39,6 +42,8 @@ namespace ToastTest
         private static SpotifyLocalAPI _spotify;
         private static SpotifyWebAPI _spotifyWeb;
         public SpotifyWebAPI spotifyWeb { get { return _spotifyWeb; } set { _spotifyWeb = value; }  }
+
+        private static NotifyIcon notify = new NotifyIcon();
         public Form1() {
             InitializeComponent();
         }
@@ -46,13 +51,7 @@ namespace ToastTest
         /// <summary>Form event</summary>
         private void Form1_KeyDown(object sender, KeyEventArgs e) {
             if(e.Control && e.KeyCode == Keys.O) {
-                if (options == null || options.IsDisposed) {
-                    options = new Options();
-                    options._form1 = this;
-                    options.Show();
-                    options.Activate();
-                    options.Location = this.Location;
-                }
+                openOptionsMenu();
             }
         }
 
@@ -83,7 +82,6 @@ namespace ToastTest
             progressBar1.Value = (int) e.TrackTime;
             //_spotify.GetStatus().PlayingPosition
         }
-
         /// <summary>Check if the application can use Spotify properly
         /// <para><see cref="SpotifyLocalAPI"/></para>
         /// </summary>
@@ -106,6 +104,8 @@ namespace ToastTest
         /// <para>Also disposes <see cref="SpotifyLocalAPI"/> and <see cref="Form1"/> </para>
         /// </summary>
         public bool close() {
+            notify.Visible = false;
+            notify.Dispose();
             _spotify.Dispose();
             this.Close();
             Console.WriteLine("Exiting...");
@@ -148,6 +148,23 @@ namespace ToastTest
                         currentColor = this.BackColor = color;
                     }
                     catch(Exception e) { Console.WriteLine(e.Message); }
+                } else {
+                    if(confFile["defaultColor"] != null) {
+                        int[] cS = Array.ConvertAll(confFile["defaultColor"].Value.Split(new[] { " " }, StringSplitOptions.None), int.Parse);
+                        Color color = Color.FromArgb(255, cS[0], cS[1], cS[2]);
+                        if(confFile["defaultTextColor"] != null) {
+                            Color invert = Color.FromArgb(255, 255 - color.R, 255 - color.G, 255 - color.B);
+                            text_songName.ForeColor = invert;
+                            text_artistName.ForeColor = invert;
+                        }
+                        currentColor = this.BackColor = color;
+                    }
+                    if(confFile["defaultTextColor"] != null) {
+                        int[] cS = Array.ConvertAll(confFile["defaultTextColor"].Value.Split(new[] { " " }, StringSplitOptions.None), int.Parse);
+                        Color color = Color.FromArgb(255, cS[0], cS[1], cS[2]);
+                        text_songName.ForeColor = color;
+                        text_artistName.ForeColor = color;
+                    }
                 }
             }
             trackName = _spotify.GetStatus().Track.TrackResource.Name + spaces;
@@ -189,9 +206,15 @@ namespace ToastTest
         private void Form1_Load(object sender, EventArgs e) {
             if (!doSpotifyCheck())
                 return;
-            if(newLocation != null) {
+            if(newLocation != null)
                 this.Location = (Point) newLocation;
-            }
+            notify.Icon = Properties.Resources.spotify_icon;
+            notify.Text = "Spotify Toast";
+            notify.BalloonTipText = "test";
+            notify.BalloonTipTitle = "test2";
+            notify.ShowBalloonTip(2000, "hi", "there", ToolTipIcon.Info);
+            notify.Visible = true;
+            notify.DoubleClick += new EventHandler(this.notify_click);
             _spotify.OnTrackChange += _spotify_OnTrackChange;
             _spotify.OnTrackTimeChange += _spotify_OnTrackTimeChange;
             _spotify.OnPlayStateChange += _spotify_OnPlayStateChange;
@@ -201,8 +224,16 @@ namespace ToastTest
             scroll_timer.Interval = 250;
             scroll_timer.Start();
             label3.Text = "v"+ToastTest.Program.version;
-            this.KeyDown += Form1_KeyDown;
             Console.WriteLine("Spotify Toast started");
+        }
+        private void openOptionsMenu() {
+            if(options == null || options.IsDisposed) {
+                options = new Options();
+                options._form1 = this;
+                options.Show();
+                options.Activate();
+                options.Location = this.Location;
+            }
         }
 
         /// <summary>Fade out/in ui based on if Spotify is playing
@@ -233,6 +264,9 @@ namespace ToastTest
             }
         }
 
+        private void notify_click(object Sender, EventArgs e) {
+            openOptionsMenu();
+        }
         private void label3_mouseEnter(object sender, EventArgs e) {
             label3.BackColor = Color.FromArgb(255, 255-currentColor.R, 255-currentColor.G, 255-currentColor.B);
         }
@@ -240,13 +274,7 @@ namespace ToastTest
             label3.BackColor = Color.FromArgb(0, 29, 29, 29);
         }
         private void label3_click(object sender, EventArgs e) {
-            if(options == null || options.IsDisposed) {
-                options = new Options();
-                options._form1 = this;
-                options.Show();
-                options.Activate();
-                options.Location = this.Location;
-            }
+            openOptionsMenu();
         }
 
         private void progressBar1_Click(object sender, EventArgs e) {

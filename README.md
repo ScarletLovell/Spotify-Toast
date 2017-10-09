@@ -3,11 +3,11 @@
 An always on-top toast application for your current song, artist, time, and album art
 
 # Why did I make this?
-Some of the applications that are used for spotify similar to this aren't updated to todays standards. So I figured, why not make my own.
+Some of the applications that are used for Spotify similar to this aren't updated to todays standards. So I figured, why not make my own.
 
 # How to use
-Simple! Just open the application, and it's ready to go as long as you have spotify open! <br/>
-You can also access the Options menu by clicking the version # in the bottom right <br/>
+Simple! Just open the application, and it's ready to go as long as you have Spotify open! <br/>
+You can also access the Options menu by clicking the version # in the bottom right, or double clicking the tray icon, or pressing CTRL-O while the app is active <br/>
 If your settings somehow miraculously dissapear, just delete the config
 
 # Imagery
