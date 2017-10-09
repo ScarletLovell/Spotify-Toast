@@ -1,4 +1,4 @@
-# Spotify-Toast
+# Spotify-Toast ![travis](https://api.travis-ci.org/Anthonyrules144/Spotify-Toast.png?branch=master)
 ![image](https://i.imgur.com/VtcgmLB.png)<br/>
 An always on-top toast application for your current song, artist, time, and album art
 
