@@ -16,19 +16,19 @@ Some of the applications that are used for Spotify similar to this aren't update
 # How to use
 Simple! Just open the application, and it's ready to go as long as you have Spotify open! <br/>
 You can also access the Options menu by clicking the version # in the bottom right, or double clicking the tray icon, or pressing CTRL-O while the app is active <br/>
-If your settings somehow miraculously dissapear, just delete the config
+If your settings somehow miraculously dissapear or mess up, just delete the config<br/>
+How do you open the options menu via Toast Mode? Double click the purple icon in your task bar
 
 # Imagery
-* https://i.imgur.com/zY8eG5p.png
 * https://i.imgur.com/jLou2uB.png
-* https://i.imgur.com/ngOUto9.png
-* https://i.imgur.com/vsiznxc.png
+* https://i.imgur.com/4tRrXGl.png
 * https://i.imgur.com/DD6BoRM.gifv
+* https://i.imgur.com/TABEjms.gifv
 
 # Todo
 * Make an option for an actual toast to show up on screen when song changes
 * Make the app better looking in general
-* Make the app work on Linux, ~~possibly mac?~~
+* ~~Make the app work on Linux~~ - done
 * Fixing any [issues](https://github.com/Anthonyrules144/Spotify-Toast/issues) that the application has
 
 #
