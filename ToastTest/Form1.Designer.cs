@@ -31,7 +31,6 @@
             this.text_songName = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.text_artistName = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -66,19 +65,6 @@
             this.text_artistName.TabIndex = 2;
             this.text_artistName.Text = "Artist Name";
             // 
-            // progressBar1
-            // 
-            this.progressBar1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
-            this.progressBar1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(19)))), ((int)(((byte)(168)))), ((int)(((byte)(2)))));
-            this.progressBar1.Location = new System.Drawing.Point(-1, 68);
-            this.progressBar1.MarqueeAnimationSpeed = 65;
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(295, 7);
-            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.progressBar1.TabIndex = 3;
-            this.progressBar1.Value = 5;
-            this.progressBar1.Click += new System.EventHandler(this.progressBar1_Click);
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -95,14 +81,12 @@
             // 
             // Form1
             // 
-            this.KeyDown += this.Form1_KeyDown;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(292, 72);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.text_artistName);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.text_songName);
@@ -112,10 +96,12 @@
             this.Name = "Form1";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -123,7 +109,6 @@
         private System.Windows.Forms.Label text_songName;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label text_artistName;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label label3;
     }
 }

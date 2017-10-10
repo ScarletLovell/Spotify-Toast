@@ -37,9 +37,10 @@ namespace ToastTest
             InitializeComponent();
         }
 
+        static Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
+
         private void Options_Load(object sender, EventArgs e) {
-            Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
             if(confFile["alwaysOnTop"] != null && confFile["alwaysOnTop"].Value.ToLower().Equals("false")) {
                 updatingCheckBox_alwaysOnTop = true;
                 checkBox_alwaysOnTop.Checked = false;
@@ -53,12 +54,18 @@ namespace ToastTest
                 button_selectTextColor.Enabled = false;
                 button_selectTextColor.Visible = false;
             }
+            if(confFile["toastMode"] != null && confFile["toastMode"].Value.ToLower().Equals("true")) {
+                updatingCheckBox_toastMode = true;
+                checkBox_toastMode.Checked = true;
+            }
             Console.WriteLine("Options form loaded");
         }
+        private bool toastMode = false;
         private void resetWindows() {
             Form1 oldForm1 = form1;
-            form1.Hide();
+            oldForm1.Hide();
             form1 = new Form1();
+            form1.isToast = toastMode;
             form1.newLocation = oldForm1.Location;
             this.Close();
             form1.ShowDialog();
@@ -66,14 +73,13 @@ namespace ToastTest
         }
         private bool updatingCheckBox_alwaysOnTop = false;
         private bool updatingCheckBox_changeColorWithSong = false;
+        private bool updatingCheckBox_toastMode = false;
         private void checkBox_alwaysOnTop_CheckedChanged(object sender, EventArgs e) {
             if(updatingCheckBox_alwaysOnTop) {
                 updatingCheckBox_alwaysOnTop = false;
                 return;
             }
             Console.WriteLine("Updated alwaysOnTop");
-            Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
             if(confFile["alwaysOnTop"] != null)
                 configManager.AppSettings.Settings.Remove("alwaysOnTop");
             configManager.AppSettings.Settings.Add("alwaysOnTop", checkBox_alwaysOnTop.Checked ? "true" : "false");
@@ -88,8 +94,6 @@ namespace ToastTest
                 return;
             }
             Console.WriteLine("Updated changeColorWithSong");
-            Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
             if(confFile["changeColorWithSong"] != null)
                 configManager.AppSettings.Settings.Remove("changeColorWithSong");
             configManager.AppSettings.Settings.Add("changeColorWithSong", checkBox_changeColorWithSong.Checked ? "true" : "false");
@@ -97,10 +101,22 @@ namespace ToastTest
             resetWindows();
         }
 
+        private void checkBox_toastMode_CheckedChanged(object sender, EventArgs e) {
+            if(updatingCheckBox_toastMode) {
+                updatingCheckBox_toastMode = false;
+                return;
+            }
+            if(confFile["toastMode"] != null)
+                configManager.AppSettings.Settings.Remove("toastMode");
+            configManager.AppSettings.Settings.Add("toastMode", checkBox_toastMode.Checked ? "true" : "false");
+            configManager.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection(configManager.AppSettings.SectionInformation.Name);
+            this.toastMode = checkBox_toastMode.Checked;
+            resetWindows();
+        }
+
         private void button_selectColor_Click(object sender, EventArgs e) {
             colorDialog1.ShowDialog();
-            Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
             if(confFile["defaultColor"] != null)
                 configManager.AppSettings.Settings.Remove("defaultColor");
             Color colors = colorDialog1.Color;
@@ -109,14 +125,18 @@ namespace ToastTest
             resetWindows();
         }
 
-        private void button2_Click(object sender, EventArgs e) {
+        private void button_selectTextColor_Click(object sender, EventArgs e) {
             colorDialog1.ShowDialog();
-            Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
             if(confFile["defaultTextColor"] != null)
                 configManager.AppSettings.Settings.Remove("defaultTextColor");
             Color colors = colorDialog1.Color;
             configManager.AppSettings.Settings.Add("defaultTextColor", colors.R + " " + colors.G + " " + colors.B);
+            configManager.Save(ConfigurationSaveMode.Modified);
+            resetWindows();
+        }
+
+        private void button2_Click_1(object sender, EventArgs e) {
+            confFile.Clear();
             configManager.Save(ConfigurationSaveMode.Modified);
             resetWindows();
         }

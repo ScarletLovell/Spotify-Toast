@@ -34,6 +34,8 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.button_selectColor = new System.Windows.Forms.Button();
             this.button_selectTextColor = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.checkBox_toastMode = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // checkBox_alwaysOnTop
@@ -43,7 +45,7 @@
             this.checkBox_alwaysOnTop.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox_alwaysOnTop.Cursor = System.Windows.Forms.Cursors.Hand;
             this.checkBox_alwaysOnTop.ForeColor = System.Drawing.SystemColors.Control;
-            this.checkBox_alwaysOnTop.Location = new System.Drawing.Point(13, 35);
+            this.checkBox_alwaysOnTop.Location = new System.Drawing.Point(12, 37);
             this.checkBox_alwaysOnTop.Name = "checkBox_alwaysOnTop";
             this.checkBox_alwaysOnTop.Size = new System.Drawing.Size(98, 17);
             this.checkBox_alwaysOnTop.TabIndex = 3;
@@ -58,7 +60,7 @@
             this.checkBox_changeColorWithSong.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox_changeColorWithSong.Cursor = System.Windows.Forms.Cursors.Hand;
             this.checkBox_changeColorWithSong.ForeColor = System.Drawing.SystemColors.Control;
-            this.checkBox_changeColorWithSong.Location = new System.Drawing.Point(13, 12);
+            this.checkBox_changeColorWithSong.Location = new System.Drawing.Point(12, 8);
             this.checkBox_changeColorWithSong.Name = "checkBox_changeColorWithSong";
             this.checkBox_changeColorWithSong.Size = new System.Drawing.Size(169, 17);
             this.checkBox_changeColorWithSong.TabIndex = 4;
@@ -70,6 +72,7 @@
             // 
             this.button1.BackColor = System.Drawing.Color.White;
             this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.ForeColor = System.Drawing.Color.Black;
             this.button1.Location = new System.Drawing.Point(0, 241);
             this.button1.Name = "button1";
@@ -101,7 +104,33 @@
             this.button_selectTextColor.TabIndex = 7;
             this.button_selectTextColor.Text = "Select Text Color";
             this.button_selectTextColor.UseVisualStyleBackColor = false;
-            this.button_selectTextColor.Click += new System.EventHandler(this.button2_Click);
+            this.button_selectTextColor.Click += new System.EventHandler(this.button_selectTextColor_Click);
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button2.ForeColor = System.Drawing.Color.White;
+            this.button2.Location = new System.Drawing.Point(9, 214);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(276, 21);
+            this.button2.TabIndex = 8;
+            this.button2.Text = "Reset All";
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            // 
+            // checkBox_toastMode
+            // 
+            this.checkBox_toastMode.AutoSize = true;
+            this.checkBox_toastMode.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.checkBox_toastMode.ForeColor = System.Drawing.SystemColors.Control;
+            this.checkBox_toastMode.Location = new System.Drawing.Point(12, 66);
+            this.checkBox_toastMode.Name = "checkBox_toastMode";
+            this.checkBox_toastMode.Size = new System.Drawing.Size(83, 17);
+            this.checkBox_toastMode.TabIndex = 10;
+            this.checkBox_toastMode.Text = "Toast Mode";
+            this.checkBox_toastMode.UseVisualStyleBackColor = true;
+            this.checkBox_toastMode.CheckedChanged += new System.EventHandler(this.checkBox_toastMode_CheckedChanged);
             // 
             // Options
             // 
@@ -109,6 +138,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.ClientSize = new System.Drawing.Size(292, 269);
+            this.Controls.Add(this.checkBox_toastMode);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.button_selectTextColor);
             this.Controls.Add(this.button_selectColor);
             this.Controls.Add(this.button1);
@@ -131,5 +162,7 @@
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button button_selectColor;
         private System.Windows.Forms.Button button_selectTextColor;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.CheckBox checkBox_toastMode;
     }
 }
