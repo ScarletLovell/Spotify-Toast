@@ -1,4 +1,4 @@
-# Spotify-Toast
+# Spotify-Toast [![HitCount](http://hits.dwyl.io/Anthonyrules144/Spotify-Toast.svg)](http://hits.dwyl.io/Anthonyrules144/Spotify-Toast)
 ![image](https://i.imgur.com/VtcgmLB.png)<br/>
 An always on-top toast application for your current song, artist, time, and album art
 
