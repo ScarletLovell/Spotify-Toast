@@ -20,6 +20,8 @@ namespace ToastTest
         interface IMouseClickable {
             void HandleMouseClick(object sender, MouseEventArgs e);
         }
+        int width = SystemInformation.VirtualScreen.Width;
+        int height = SystemInformation.VirtualScreen.Height;
         static Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
         KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
         protected override CreateParams CreateParams
@@ -33,19 +35,86 @@ namespace ToastTest
                 return cp;
             }
         }
-        private spotifyCode spotifyCode = new spotifyCode();
         public static Options options;
         private int trackNameLength;
         private string spaces = "              ";
         private string trackName;
         private int scroll = 0;
-        private static SpotifyLocalAPI _spotify;
-        private static SpotifyWebAPI _spotifyWeb;
-        public SpotifyWebAPI spotifyWeb { get { return _spotifyWeb; } set { _spotifyWeb = value; }  }
-
-        private static NotifyIcon notify = new NotifyIcon();
+        Spotify Spotify = new Spotify();
+        public SpotifyLocalAPI _spotify { get { return Spotify._spotify; } set { Spotify._spotify = value; } }
+        public SpotifyWebAPI spotifyWeb { get { return Spotify._spotifyWeb; } set { Spotify._spotifyWeb = value; }  }
         public Form1() {
             InitializeComponent();
+        }
+
+        public bool toast_isEnabled = false;
+        public bool toast_fadeIn = false;
+        public object newLocation = null;
+        private static NotifyIcon notify = new NotifyIcon() {
+            Icon = new Icon(@".\Resources\spotify-icon.ico"),
+            Text = "Spotify Toast",
+            Visible = true            
+        };
+        private ContextMenu notify_contextMenu = new System.Windows.Forms.ContextMenu();
+        private MenuItem notify_menu1 = new MenuItem();
+        private MenuItem notify_menu2 = new MenuItem();
+        public ProgressBar progressBar1 = new ProgressBar() {
+            Location = new Point(0, 69),
+            BackColor = Color.FromArgb(255, 0, 0, 0),
+            BarColor = Color.FromArgb(255, 100, 235, 100),
+        };
+        private void Form1_Load(object sender, EventArgs e) {
+            if(!Spotify.Spotify_Load(this))
+                return;
+            progressBar1.Size = new Size(this.Size.Width, 3);
+            progressBar1.Click += progressBar1_Click;
+            progressBar1.Parent = this;
+            if(notify.ContextMenu == null) {
+                notify.DoubleClick += new EventHandler(this.notify_click);
+                this.notify_contextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { this.notify_menu1 });
+                this.notify_contextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { this.notify_menu2 });
+                this.notify_menu1.Index = 0;
+                this.notify_menu1.Text = "Open Options";
+                this.notify_menu1.Click += new System.EventHandler(this.label3_click);
+                this.notify_menu2.Index = 1;
+                this.notify_menu2.Text = "E&xit";
+                this.notify_menu2.Click += new System.EventHandler(this.notify_menu1_close);
+            }
+            notify.ContextMenu = this.notify_contextMenu;
+            if(this.toast_isEnabled || confFile["toastMode"] != null && confFile["toastMode"].Value.ToLower().Equals("true")) {
+                this.toast_isEnabled = true;
+                this.FormBorderStyle = FormBorderStyle.None;
+                if(!this.toast_fadeIn)
+                    this.Location = new Point(width - 300, height);
+                else
+                    this.BackColor = Color.FromArgb(0, 255, 255, 255);
+                toast_timer.Tick += new EventHandler(this.TimerTick_Toast_Push);
+                toast_timer.Start();
+                Console.WriteLine("Toasty");
+            }
+            else if(newLocation != null)
+                this.Location = (Point)newLocation;
+            UpdateTrack();
+            //Fade(_spotify.GetStatus().Playing);
+            scroll_timer.Tick += new EventHandler(this.TimerTick_Scroll);
+            scroll_timer.Start();
+            label3.Text = "v" + ToastTest.Program.version;
+            Console.WriteLine("Spotify Toast started");
+        }
+
+        private void notify_menu1_close(object sender, EventArgs e) {
+            this.close();
+        }
+
+        private void openOptionsMenu() {
+            if(options == null || options.IsDisposed) {
+                options = new Options();
+                options._form1 = this;
+                options.Show();
+                options.Activate();
+                if(!this.toast_isEnabled)
+                    options.Location = this.Location;
+            }
         }
 
         /// <summary>Form event</summary>
@@ -53,51 +122,6 @@ namespace ToastTest
             if(e.Control && e.KeyCode == Keys.O) {
                 openOptionsMenu();
             }
-        }
-
-        /// <summary>Spotify event</summary>
-        private void _spotify_OnPlayStateChange(object sender, PlayStateEventArgs e) {
-            if(InvokeRequired) {
-                Invoke(new Action(() => _spotify_OnPlayStateChange(sender, e)));
-                return;
-            }
-            fade(e.Playing);
-        }
-        /// <summary>Spotify event</summary>
-        private void _spotify_OnTrackChange(object sender, TrackChangeEventArgs e) {
-            if (InvokeRequired) {
-                Invoke(new Action(() => _spotify_OnTrackChange(sender, e)));
-                return;
-            }
-            updateTrack();
-        }
-        /// <summary>Spotify event</summary>
-        private void _spotify_OnTrackTimeChange(object sender, TrackTimeChangeEventArgs e) {
-            if(InvokeRequired) {
-                Invoke(new Action(() => _spotify_OnTrackTimeChange(sender, e)));
-                return;
-            }
-            if(!_spotify.GetStatus().Playing)
-                return;
-            progressBar1.Value = (int) e.TrackTime;
-            //_spotify.GetStatus().PlayingPosition
-        }
-        /// <summary>Check if the application can use Spotify properly
-        /// <para><see cref="SpotifyLocalAPI"/></para>
-        /// </summary>
-        public bool doSpotifyCheck() {
-            if (_spotify == null)
-                _spotify = new SpotifyLocalAPI();
-            if (!SpotifyLocalAPI.IsSpotifyRunning() || !SpotifyLocalAPI.IsSpotifyWebHelperRunning() || !_spotify.Connect()) {
-                DialogResult result = MessageBox.Show("Unable to connect to spotify, retry?", "Spotify Toast", MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                    return doSpotifyCheck();
-                close();
-                return false;
-            }
-            _spotify.ListenForEvents = true;
-            _spotify.SynchronizingObject = this;
-            return true;
         }
 
         /// <summary>Closes the application
@@ -114,7 +138,7 @@ namespace ToastTest
         Image bp = null;
 
         /// <summary>Returns the most used color based on a <see cref="Bitmap"/></summary>
-        public static Color GetMostFrequentPixels(Bitmap b) {
+        private static Color GetMostFrequentPixels(Bitmap b) {
             List<Color> list = new List<Color>();
             for(int x = 0; x < b.Width; x++) {
                 for(int y = 0; y < b.Height; y++) {
@@ -126,23 +150,23 @@ namespace ToastTest
             return sort.First().First();
         }
 
-        private Color currentColor;
         /// <summary>Update all info on the track
         /// <para><see cref="SpotifyLocalAPI.GetStatus()"/></para>
         /// </summary>
-        private void updateTrack() {
-            if (bp != null)
+        public void UpdateTrack() {
+            if(bp != null)
                 bp.Dispose();
-            if(this.isToast) {
+            if(this.toast_isEnabled) {
                 Console.WriteLine("Toastiest");
-                toast_pushUpTimer.Start();
+                toast_timer.Start();
             }
-            if (_spotify.GetStatus().Track != null && _spotify.GetStatus().Track.Length > 0) {
+            if(_spotify.GetStatus().Track != null && _spotify.GetStatus().Track.Length > 0) {
                 Size s = new Size(64, 64);
                 bp = new Bitmap(_spotify.GetStatus().Track.GetAlbumArt(AlbumArtSize.Size160), s);
                 pictureBox1.Image = bp;
                 SetColors();
-            } else {
+            }
+            else {
                 text_songName.Text = (trackName = "No current song playing");
                 trackNameLength = 0;
                 text_artistName.Text = "No artist";
@@ -154,18 +178,20 @@ namespace ToastTest
             text_artistName.Text = _spotify.GetStatus().Track.ArtistResource.Name;
             progressBar1.Maximum = _spotify.GetStatus().Track.Length;
         }
+
+        private Color currentColor;
         private void SetColors() {
             if(confFile["changeColorWithSong"] == null || !confFile["changeColorWithSong"].Value.ToLower().Equals("false")) {
                 try {
                     Color color = GetMostFrequentPixels((Bitmap)bp);
-                    int r = ((Math.Abs(255 - color.R) < 50) && (Math.Abs(255 - color.R) > 5) ? 215 - color.R : 255 - color.R);
-                    int g = ((Math.Abs(255 - color.G) < 50) && (Math.Abs(255 - color.G) > 5) ? 215 - color.G : 255 - color.G);
-                    int b = ((Math.Abs(255 - color.B) < 50) && (Math.Abs(255 - color.B) > 5) ? 215 - color.B : 255 - color.B);
-                    Color invert = Color.FromArgb(255, 255 - color.R, 255 - color.G, 255 - color.B);
-                    progressBar1.BarColor = invert;
+                    int rV = 255 - color.R;
+                    int gV = 255 - color.G;
+                    int bV = 255 - color.B;
+                    Color invert = Color.FromArgb(255, rV, gV, bV);
+                    //progressBar1.BarColor = invert;
                     text_songName.ForeColor = invert;
                     text_artistName.ForeColor = invert;
-                    currentColor = this.BackColor = color;
+                    this.BackColor = currentColor = Color.FromArgb(this.toast_fadeIn ? this.BackColor.A : color.A, color.R, color.G, color.B);
                 }
                 catch(Exception e) { Console.WriteLine(e.Message); }
             } else {
@@ -174,11 +200,11 @@ namespace ToastTest
                     Color color = Color.FromArgb(255, cS[0], cS[1], cS[2]);
                     if(confFile["defaultTextColor"] == null || !confFile["defaultTextColor"].Value.ToLower().Equals("true")) {
                         Color invert = Color.FromArgb(255, 255 - color.R, 255 - color.G, 255 - color.B);
-                        progressBar1.BarColor = invert;
+                        //progressBar1.BarColor = invert;
                         text_songName.ForeColor = invert;
                         text_artistName.ForeColor = invert;
                     }
-                    currentColor = this.BackColor = color;
+                    this.BackColor = currentColor = Color.FromArgb(this.toast_fadeIn ? this.BackColor.A : color.A, color.R, color.G, color.B);
                 }
                 if(confFile["defaultTextColor"] != null) {
                     int[] cS = Array.ConvertAll(confFile["defaultTextColor"].Value.Split(new[] { " " }, StringSplitOptions.None), int.Parse);
@@ -190,7 +216,7 @@ namespace ToastTest
         }
 
 
-        Timer toast_pushUpTimer = new Timer() { Interval = 10 };
+        public Timer toast_timer = new Timer() { Interval = 5 };
         private int toast_ticks = 0;
         private bool toast_isOnTop = false;
         /// <summary>Make the toast push up from the screen</summary>
@@ -199,23 +225,41 @@ namespace ToastTest
             int y = this.Location.Y;
             int width = SystemInformation.VirtualScreen.Width;
             int height = SystemInformation.VirtualScreen.Height;
-            if(x <= (width - 300) && y <= (height - 120) && !toast_isOnTop) {
-                toast_ticks += 1;
-                if(toast_ticks >= 65)
-                    toast_isOnTop = true;
-                return;
-            } else if(toast_isOnTop && toast_ticks >= 65) {
-                Point p = new Point(x, y + 1);
-                this.Location = p;
-                if(x >= (width - 300) && y >= height) {
-                    toast_isOnTop = false;
-                    toast_ticks = 0;
-                    toast_pushUpTimer.Stop();
+            if(!this.toast_fadeIn) { 
+                if(x <= (width - 300) && y <= (height - 120) && !toast_isOnTop) {
+                    toast_ticks += 1;
+                    if(toast_ticks >= 65)
+                        toast_isOnTop = true;
+                    return;
+                } else if(toast_isOnTop && toast_ticks >= 65) {
+                    Point p = new Point(x, y + 1);
+                    this.Location = p;
+                    if(x >= (width - 300) && y >= height) {
+                        toast_isOnTop = false;
+                        toast_ticks = 0;
+                        toast_timer.Stop();
+                    }
+                    return;
                 }
-                return;
+                Point point = new Point(x, y - 1);
+                this.Location = point;
+            } else { 
+                if(this.BackColor.A >= 255 && !toast_isOnTop) {
+                    toast_ticks += 1;
+                    if(toast_ticks >= 65)
+                        toast_isOnTop = true;
+                    return;
+                } else if(toast_isOnTop && toast_ticks >= 65) {
+                    this.BackColor = this.BackColor = Color.FromArgb(BackColor.A - 1, BackColor.R, BackColor.G, BackColor.B);
+                    if(this.BackColor.A >= 255) {
+                        toast_isOnTop = false;
+                        toast_ticks = 0;
+                        toast_timer.Stop();
+                    }
+                    return;
+                }
+                this.BackColor = Color.FromArgb(BackColor.A + 1, BackColor.R, BackColor.G, BackColor.B);
             }
-            Point point = new Point(x, y - 1);
-            this.Location = point;
         }
 
         Timer scroll_timer = new Timer() { Interval = 250 };
@@ -243,62 +287,11 @@ namespace ToastTest
                 text_songName.Text = sub.Substring(0, a);
             }
         }
-        public bool isToast = false;
-        public Object newLocation = null;
-        ProgressBar progressBar1;
-        private void Form1_Load(object sender, EventArgs e) {
-            if (!doSpotifyCheck())
-                return;
-            progressBar1 = new ProgressBar();
-            progressBar1.Location = new Point(0, 69);
-            progressBar1.Size = new Size(this.Size.Width, 3);
-            progressBar1.BackColor = Color.FromArgb(255, 0, 0, 0);
-            progressBar1.BarColor = Color.FromArgb(255, 50, 75, 50);
-            progressBar1.Click += progressBar1_Click;
-            progressBar1.Parent = this;
-            if(this.isToast || confFile["toastMode"] != null && confFile["toastMode"].Value.ToLower().Equals("true")) {
-                this.isToast = true;
-                this.FormBorderStyle = FormBorderStyle.None;
-                int width = SystemInformation.VirtualScreen.Width;
-                int height = SystemInformation.VirtualScreen.Height;
-                this.Location = new Point(width - 300, height);
-                toast_pushUpTimer.Tick += new EventHandler(this.TimerTick_Toast_Push);
-                toast_pushUpTimer.Start();
-                notify.Icon = new Icon(@".\Resources\spotify-icon.ico");
-                notify.Text = "Spotify Toast";
-                notify.BalloonTipText = "test";
-                notify.BalloonTipTitle = "test2";
-                notify.ShowBalloonTip(2000, "hi", "there", ToolTipIcon.Info);
-                notify.Visible = true;
-                notify.DoubleClick += new EventHandler(this.notify_click);
-                Console.WriteLine("Toasty");
-            } else if(newLocation != null)
-                this.Location = (Point) newLocation;
-            _spotify.OnTrackChange += _spotify_OnTrackChange;
-            _spotify.OnTrackTimeChange += _spotify_OnTrackTimeChange;
-            _spotify.OnPlayStateChange += _spotify_OnPlayStateChange;
-            updateTrack();
-            fade(_spotify.GetStatus().Playing);
-            scroll_timer.Tick += new EventHandler(this.TimerTick_Scroll);
-            scroll_timer.Start();
-            label3.Text = "v"+ToastTest.Program.version;
-            Console.WriteLine("Spotify Toast started");
-        }
-        private void openOptionsMenu() {
-            if(options == null || options.IsDisposed) {
-                options = new Options();
-                options._form1 = this;
-                options.Show();
-                options.Activate();
-                if(!this.isToast)
-                    options.Location = this.Location;
-            }
-        }
 
         /// <summary>Fade out/in ui based on if Spotify is playing
         /// <para><see cref="SpotifyLocalAPI.GetStatus()"/></para>
         /// </summary>
-        private void fade(bool playing) {
+        public void Fade(bool playing) {
             Console.WriteLine("Music " + (playing ? "started" : "stopped"));
             if (!playing) {
                 /*using (Graphics g = Graphics.FromImage(image)) {
@@ -310,7 +303,7 @@ namespace ToastTest
                 }
                 pictureBox1.Image = image;
                 bp = oldImage;*/
-                Bitmap b = (Bitmap) bp.Clone();
+                Bitmap b = (Bitmap)bp;
                 for(int x = 0; x < b.Width; x++) {
                     for(int y = 0; y < b.Height; y++) {
                         Color c = b.GetPixel(x, y);
@@ -319,13 +312,14 @@ namespace ToastTest
                     }
                 }
                 this.BackColor = GetMostFrequentPixels(b);
-                bp = b;
                 pictureBox1.Image = bp;
                 text_songName.ForeColor = Color.FromArgb(255, 15, 15, 15);
                 text_artistName.ForeColor = Color.FromArgb(255, 15, 15, 15);
             } else {
-                if(bp != null)
+                if(bp != null) {
+                    pictureBox1.Image = null;
                     bp.Dispose();
+                }
                 pictureBox1.Image = bp = new Bitmap(_spotify.GetStatus().Track.GetAlbumArt(AlbumArtSize.Size160), new Size(64, 64));
                 SetColors();
             }

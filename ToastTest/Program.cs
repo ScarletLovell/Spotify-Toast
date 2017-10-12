@@ -9,6 +9,7 @@ namespace ToastTest
 {
     static class Program
     {
+        public static bool doContinue { get; set; }
         public static string version = "1.1.9";
 
         [STAThread]
@@ -34,7 +35,11 @@ namespace ToastTest
                 doSpotify(form1);
             configManager.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection(configManager.AppSettings.SectionInformation.Name);
-            Application.Run(form1);
+            doContinue = true;
+            while(doContinue) {
+                doContinue = false;
+                Application.Run(form1);
+            }
         }
         static async void doSpotify(Form1 form1) {
             WebAPIFactory webApiFactory = new WebAPIFactory(
