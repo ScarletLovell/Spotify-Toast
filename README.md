@@ -20,6 +20,7 @@ If your settings somehow miraculously dissapear or mess up, just delete the conf
 How do you open the options menu via Toast Mode? Double click the purple icon in your task bar
 
 # Imagery
+* https://cdn.discordapp.com/attachments/172272548950573057/391315612095217664/unknown.png
 * https://i.imgur.com/jLou2uB.png
 * https://i.imgur.com/4tRrXGl.png
 * https://i.imgur.com/DD6BoRM.gifv
@@ -32,7 +33,7 @@ How do you open the options menu via Toast Mode? Double click the purple icon in
 * Fixing any [issues](https://github.com/Anthonyrules144/Spotify-Toast/issues) that the application has
 
 #
-If you have an issue with this, please post in the [issues](https://github.com/Anthonyrules144/Spotify-Toast/issues) tab 
+If you have an issue with this, please post in the [issues](https://github.com/Anthonyrules144/Spotify-Toast/issues) tab
 
 If you would like to download the latest exe, it can be found [in the downloads](https://github.com/Anthonyrules144/Spotify-Toast/releases) section
 

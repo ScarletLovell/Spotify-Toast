@@ -38,14 +38,15 @@
             this.checkBox_toastMode = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_main = new System.Windows.Forms.TabPage();
+            this.checkBox_amountPlayed = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBox_textTicks = new System.Windows.Forms.TextBox();
             this.tabPage_toast = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_ticks = new System.Windows.Forms.TextBox();
             this.checkBox_fadeIn = new System.Windows.Forms.CheckBox();
             this.tabPage_debug = new System.Windows.Forms.TabPage();
             this.button_forceExit = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage_main.SuspendLayout();
             this.tabPage_toast.SuspendLayout();
@@ -162,8 +163,9 @@
             // 
             this.tabPage_main.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.tabPage_main.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.tabPage_main.Controls.Add(this.checkBox_amountPlayed);
             this.tabPage_main.Controls.Add(this.label2);
-            this.tabPage_main.Controls.Add(this.textBox1);
+            this.tabPage_main.Controls.Add(this.textBox_textTicks);
             this.tabPage_main.Controls.Add(this.checkBox_changeColorWithSong);
             this.tabPage_main.Controls.Add(this.checkBox_alwaysOnTop);
             this.tabPage_main.Controls.Add(this.button_selectColor);
@@ -174,6 +176,39 @@
             this.tabPage_main.Size = new System.Drawing.Size(284, 180);
             this.tabPage_main.TabIndex = 0;
             this.tabPage_main.Text = "Main";
+            // 
+            // checkBox_amountPlayed
+            // 
+            this.checkBox_amountPlayed.AutoSize = true;
+            this.checkBox_amountPlayed.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.checkBox_amountPlayed.ForeColor = System.Drawing.SystemColors.Control;
+            this.checkBox_amountPlayed.Location = new System.Drawing.Point(6, 29);
+            this.checkBox_amountPlayed.Name = "checkBox_amountPlayed";
+            this.checkBox_amountPlayed.Size = new System.Drawing.Size(175, 17);
+            this.checkBox_amountPlayed.TabIndex = 16;
+            this.checkBox_amountPlayed.Text = "Show amount played on a song";
+            this.checkBox_amountPlayed.UseVisualStyleBackColor = true;
+            this.checkBox_amountPlayed.CheckedChanged += new System.EventHandler(this.checkBox_amountPlayed_CheckedChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(177, 10);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(60, 13);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "Text Ticks:";
+            // 
+            // textBox_textTicks
+            // 
+            this.textBox_textTicks.Location = new System.Drawing.Point(243, 6);
+            this.textBox_textTicks.MaxLength = 5;
+            this.textBox_textTicks.Name = "textBox_textTicks";
+            this.textBox_textTicks.Size = new System.Drawing.Size(35, 20);
+            this.textBox_textTicks.TabIndex = 14;
+            this.textBox_textTicks.Text = "250";
+            this.textBox_textTicks.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_textTicks_KeyPress);
             // 
             // tabPage_toast
             // 
@@ -242,25 +277,6 @@
             this.button_forceExit.UseVisualStyleBackColor = false;
             this.button_forceExit.Click += new System.EventHandler(this.button_forceExit_Click);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(177, 10);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
-            this.label2.TabIndex = 15;
-            this.label2.Text = "Text Ticks:";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(243, 6);
-            this.textBox1.MaxLength = 5;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(35, 20);
-            this.textBox1.TabIndex = 14;
-            this.textBox1.Text = "65";
-            // 
             // Options
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -303,6 +319,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox_ticks;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox_textTicks;
+        private System.Windows.Forms.CheckBox checkBox_amountPlayed;
     }
 }

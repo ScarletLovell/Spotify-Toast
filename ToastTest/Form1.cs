@@ -4,6 +4,8 @@ using ToastTest;
 
 namespace ToastTest
 {
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using SpotifyAPI.Local;
     using SpotifyAPI.Local.Enums;
     using SpotifyAPI.Web;
@@ -12,6 +14,7 @@ namespace ToastTest
     using System.Collections.Generic;
     using System.Configuration;
     using System.Drawing;
+    using System.IO;
     using System.Linq;
 
     public partial class Form1 : Form
@@ -63,6 +66,11 @@ namespace ToastTest
             BackColor = Color.FromArgb(255, 0, 0, 0),
             BarColor = Color.FromArgb(255, 100, 235, 100),
         };
+        public class Song {
+            public string artist { get; set; }
+            public string name { get; set; }
+            public int plays { get; set; }
+        }
         private void Form1_Load(object sender, EventArgs e) {
             if(!Spotify.Spotify_Load(this))
                 return;
@@ -90,12 +98,39 @@ namespace ToastTest
                     this.BackColor = Color.FromArgb(0, 255, 255, 255);
                 toast_timer.Tick += new EventHandler(this.TimerTick_Toast_Push);
                 toast_timer.Start();
-                Console.WriteLine("Toasty");
             }
-            else if(newLocation != null)
+            if(confFile["showAmountOfPlays"] == null || !confFile["showAmountOfPlays"].Value.ToLower().Equals("true")) {
+                label1.Visible = false;
+                text_amountOfPlays.Visible = false;
+            } else {
+                JsonSerializer serializer = new JsonSerializer();
+                using(FileStream s = File.Open("./songs.json", FileMode.Open))
+                using(StreamReader sr = new StreamReader(s))
+                using(JsonReader reader = new JsonTextReader(sr)) {
+                    while(reader.Read()) {
+                        if(reader.TokenType == JsonToken.StartObject) {
+                            Song _song = serializer.Deserialize<Song>(reader);
+                            JObject song = new JObject(
+                                new JProperty("artist", _song.artist),
+                                new JProperty("name", _song.name),
+                                new JProperty("plays", _song.plays)
+                            );
+                            songs.Add(song);
+                        }
+                    }
+                }
+            }
+            if(newLocation != null)
                 this.Location = (Point)newLocation;
             UpdateTrack();
             //Fade(_spotify.GetStatus().Playing);
+            if(confFile["textTicks"] != null && confFile["showAmountOfPlays"].Value != null) {
+                int tick = 250;
+                if(!int.TryParse(confFile["showAmountOfPlays"].Value, out tick))
+                    tick = 250;
+                if(this.scroll_timer.Interval != tick)
+                    this.scroll_timer.Interval = tick;
+            }
             scroll_timer.Tick += new EventHandler(this.TimerTick_Scroll);
             scroll_timer.Start();
             label3.Text = "v" + ToastTest.Program.version;
@@ -150,6 +185,28 @@ namespace ToastTest
             return sort.First().First();
         }
 
+        private JArray songs = new JArray();
+        /*public class Song {
+            public string Name { get; set; }
+            public string Artist { get; set; }
+            public int Plays { get; set; }
+        }
+
+        public Song getSong(string name, string artist) {
+            var json = File.ReadAllText("./songs.json");
+            List<Song> songs = JsonConvert.DeserializeObject<List<Song>>(json);
+            var result = new Song();
+            if(songs.Count > 0) {
+                foreach(var song in songs) {
+                    if(song.Name.Equals(name) && song.Artist.Equals(artist)) {
+                        result = song;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }*/
+
         /// <summary>Update all info on the track
         /// <para><see cref="SpotifyLocalAPI.GetStatus()"/></para>
         /// </summary>
@@ -177,11 +234,40 @@ namespace ToastTest
             trackNameLength = trackName.Length;
             text_artistName.Text = _spotify.GetStatus().Track.ArtistResource.Name;
             progressBar1.Maximum = _spotify.GetStatus().Track.Length;
+            if(confFile["showAmountOfPlays"] != null && confFile["showAmountOfPlays"].Value.ToLower().Equals("true")) {
+                if(!File.Exists("./songs.json")) {
+                    File.Create("./songs.json");
+                }
+                int plays = 1;
+                for(int i = 0; i < songs.Count; i++) {
+                    JObject _song = (JObject)songs[i];
+                    if(((string) _song.GetValue("name")) == text_songName.Text && ((string)_song.GetValue("artist")) == text_artistName.Text) {
+                        string _p = (string) _song.GetValue("plays");
+                        if(Int32.TryParse(_p, out plays)) {
+                            plays += 1;
+                        } else
+                            plays = 1;
+                        Console.WriteLine(plays);
+                    }
+                }
+                JObject song = new JObject(
+                    new JProperty("artist", text_artistName.Text),
+                    new JProperty("name", text_songName.Text),
+                    new JProperty("plays", plays)
+                );
+                songs.Add(song);
+                StreamWriter file = File.CreateText("./songs.json");
+                using(JsonTextWriter writer = new JsonTextWriter(file)) {
+                    //Save JArray of customers
+                    songs.WriteTo(writer);
+                }
+                text_amountOfPlays.Text = plays.ToString();
+            }
         }
 
         private Color currentColor;
         private void SetColors() {
-            if(confFile["changeColorWithSong"] == null || !confFile["changeColorWithSong"].Value.ToLower().Equals("false")) {
+            if(confFile["changeColorWithSong"] == null || confFile["changeColorWithSong"].Value.ToLower().Equals("true")) {
                 try {
                     Color color = GetMostFrequentPixels((Bitmap)bp);
                     int rV = 255 - color.R;
@@ -191,6 +277,8 @@ namespace ToastTest
                     //progressBar1.BarColor = invert;
                     text_songName.ForeColor = invert;
                     text_artistName.ForeColor = invert;
+                    label1.ForeColor = invert;
+                    text_amountOfPlays.ForeColor = invert;
                     this.BackColor = currentColor = Color.FromArgb(this.toast_fadeIn ? this.BackColor.A : color.A, color.R, color.G, color.B);
                 }
                 catch(Exception e) { Console.WriteLine(e.Message); }
@@ -262,7 +350,7 @@ namespace ToastTest
             }
         }
 
-        Timer scroll_timer = new Timer() { Interval = 250 };
+        private Timer scroll_timer = new Timer() { Interval = 250 };
         private long time = 0;
         private int ticksBeforeStop = 0;
         /// <summary>Scroll the song name's text</summary>

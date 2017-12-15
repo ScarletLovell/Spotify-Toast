@@ -33,6 +33,8 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.text_artistName = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.text_amountOfPlays = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -80,6 +82,26 @@
             this.label3.MouseEnter += new System.EventHandler(this.label3_mouseEnter);
             this.label3.MouseLeave += new System.EventHandler(this.label3_mouseLeave);
             // 
+            // text_amountOfPlays
+            // 
+            this.text_amountOfPlays.AutoSize = true;
+            this.text_amountOfPlays.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.25F);
+            this.text_amountOfPlays.Location = new System.Drawing.Point(270, 2);
+            this.text_amountOfPlays.Name = "text_amountOfPlays";
+            this.text_amountOfPlays.Size = new System.Drawing.Size(10, 12);
+            this.text_amountOfPlays.TabIndex = 5;
+            this.text_amountOfPlays.Text = "0";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.25F);
+            this.label1.Location = new System.Drawing.Point(239, 2);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(31, 12);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Plays:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -87,6 +109,8 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(292, 72);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.text_amountOfPlays);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.text_artistName);
             this.Controls.Add(this.pictureBox1);
@@ -112,6 +136,8 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label text_artistName;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label text_amountOfPlays;
+        private System.Windows.Forms.Label label1;
     }
 }
 

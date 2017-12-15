@@ -58,6 +58,16 @@ namespace ToastTest
                 updatingCheckBox_toastMode = true;
                 checkBox_toastMode.Checked = true;
             }
+            if(confFile["showAmountOfPlays"] != null && confFile["showAmountOfPlays"].Value.ToLower().Equals("true")) {
+                updatingCheckBox_showAmount = true;
+                checkBox_amountPlayed.Checked = true;
+            }
+            if(confFile["textTicks"] != null && confFile["textTicks"].Value != null) {
+                int ticks = 250;
+                if(!int.TryParse(confFile["textTicks"].Value, out ticks))
+                    ticks = 250;
+                textBox_textTicks.Text = ticks.ToString();
+            }
             Console.WriteLine("Options form loaded");
         }
         private bool toastMode = false;
@@ -77,6 +87,7 @@ namespace ToastTest
         private bool updatingCheckBox_changeColorWithSong = false;
         private bool updatingCheckBox_toastMode = false;
         private bool updatingCheckBox_fadeIn = false;
+        private bool updatingCheckBox_showAmount = false;
         private void checkBox_alwaysOnTop_CheckedChanged(object sender, EventArgs e) {
             if(updatingCheckBox_alwaysOnTop) {
                 updatingCheckBox_alwaysOnTop = false;
@@ -113,6 +124,15 @@ namespace ToastTest
             ApplyOptions();
         }
 
+        private void checkBox_amountPlayed_CheckedChanged(object sender, EventArgs e) {
+            if(updatingCheckBox_showAmount) {
+                updatingCheckBox_showAmount = false;
+                return;
+            }
+            SetSetting("showAmountOfPlays", checkBox_amountPlayed.Checked ? "true" : "false");
+            ApplyOptions();
+        }
+
         private void button_selectColor_Click(object sender, EventArgs e) {
             colorDialog1.ShowDialog();
             Color colors = colorDialog1.Color;
@@ -139,6 +159,24 @@ namespace ToastTest
 
         private void button1_Click(object sender, EventArgs e) {
             this.Close();
+        }
+
+        private void textBox_textTicks_KeyPress(object sender, KeyPressEventArgs e) {
+            if(e.KeyChar == (char) Keys.Enter) {
+                //e.Handled = true;
+                string t = textBox_textTicks.Text;
+                if(confFile["textTicks"] != null && confFile["textTicks"].Value != null && t == confFile["textTicks"].Value) {
+                    return;
+                }
+                int ticks = 250;
+                if(!int.TryParse(t, out ticks)) {
+                    ticks = 250;
+                    textBox_textTicks.Text = ticks.ToString();
+                    return;
+                }
+                configManager.AppSettings.Settings.Add("textTicks", ticks.ToString());
+                ApplyOptions();
+            }
         }
     }
 }
