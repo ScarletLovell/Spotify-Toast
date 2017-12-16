@@ -1,5 +1,7 @@
 # Spotify-Toast [![HitCount](http://hits.dwyl.io/Anthonyrules144/Spotify-Toast.svg)](http://hits.dwyl.io/Anthonyrules144/Spotify-Toast)
-![image](https://i.imgur.com/VtcgmLB.png)<br/>
+v1.1.7             |  v1.3
+:-------------------------:|:-------------------------:
+![image](https://i.imgur.com/VtcgmLB.png)  |  ![image](https://i.imgur.com/gqcW6vu.png)
 An always on-top toast application for your current song, artist, time, and album art
 
 # Working
@@ -20,7 +22,6 @@ If your settings somehow miraculously dissapear or mess up, just delete the conf
 How do you open the options menu via Toast Mode? Double click the purple icon in your task bar
 
 # Imagery
-* https://cdn.discordapp.com/attachments/172272548950573057/391315612095217664/unknown.png
 * https://i.imgur.com/jLou2uB.png
 * https://i.imgur.com/4tRrXGl.png
 * https://i.imgur.com/DD6BoRM.gifv
