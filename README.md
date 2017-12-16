@@ -1,7 +1,9 @@
 # Spotify-Toast [![HitCount](http://hits.dwyl.io/Anthonyrules144/Spotify-Toast.svg)](http://hits.dwyl.io/Anthonyrules144/Spotify-Toast)
-v1.1.7             |  v1.3
+Version compare: </br>
+
+v1.1.7             |  v1.4
 :-------------------------:|:-------------------------:
-![image](https://i.imgur.com/VtcgmLB.png)  |  ![image](https://i.imgur.com/gqcW6vu.png)
+![image](https://i.imgur.com/VtcgmLB.png)  |  ![image](https://i.imgur.com/BlOo8nS.png)
 An always on-top toast application for your current song, artist, time, and album art
 
 # Working
