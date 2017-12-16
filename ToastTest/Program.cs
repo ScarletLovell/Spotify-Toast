@@ -3,38 +3,42 @@ using SpotifyAPI.Web.Enums;
 using System;
 using System.Windows.Forms;
 using System.Configuration;
-using System.Drawing;
+using System.IO;
 
 namespace ToastTest
 {
     static class Program
     {
         public static bool doContinue { get; set; }
-        public static string version = "1.3";
+        public static string version = "1.4";
 
         [STAThread]
         static void Main() {
+            if(!File.Exists("./songs.json")) {
+                File.Create("./songs.json").Close();
+            }
             Application.SetCompatibleTextRenderingDefault(false);
             Form1 form1 = new Form1();
+            /*
             string webApi = "";
             Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
             if(confFile["webApi"] != null)
                 webApi = confFile["webApi"].Value;
             webApi = "don't do it";
-            if(webApi.Length <= 0) { // We're not gonna go through with this because it's not ready.
-                DialogResult result = MessageBox.Show("Do you want to activate Spotify Web API? This will only show up once\n" +
-                    "- This will open your browser each time the program is launched -", "Spotify Toast", MessageBoxButtons.YesNo);
-                bool res = (result == DialogResult.Yes ? true : false);
-                if(res)
-                    doSpotify(form1);
-                Console.WriteLine("res  -  " + res);
-                configManager.AppSettings.Settings.Add("webApi", (res ? "true" : "false"));
-            }
+            DialogResult result = MessageBox.Show("Do you want to activate Spotify Web API? This will only show up once\n" +
+                "- This will open your browser each time the program is launched -", "Spotify Toast", MessageBoxButtons.YesNo);
+            bool res = (result == DialogResult.Yes ? true : false);
+            if(res)
+                doSpotify(form1);
+            Console.WriteLine("res  -  " + res);
+            configManager.AppSettings.Settings.Add("webApi", (res ? "true" : "false"));
             else if(webApi.ToLower().Equals("true"))
                 doSpotify(form1);
+            
             configManager.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection(configManager.AppSettings.SectionInformation.Name);
+            */
             doContinue = true;
             while(doContinue) {
                 doContinue = false;

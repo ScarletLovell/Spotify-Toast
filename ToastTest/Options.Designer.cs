@@ -34,10 +34,11 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.button_selectColor = new System.Windows.Forms.Button();
             this.button_selectTextColor = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.button_applyAll = new System.Windows.Forms.Button();
             this.checkBox_toastMode = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_main = new System.Windows.Forms.TabPage();
+            this.checkBox_showVersion = new System.Windows.Forms.CheckBox();
             this.checkBox_amountPlayed = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox_textTicks = new System.Windows.Forms.TextBox();
@@ -45,11 +46,24 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_ticks = new System.Windows.Forms.TextBox();
             this.checkBox_fadeIn = new System.Windows.Forms.CheckBox();
+            this.tabPage_songs = new System.Windows.Forms.TabPage();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button_history5 = new System.Windows.Forms.Button();
+            this.button_history4 = new System.Windows.Forms.Button();
+            this.button_history3 = new System.Windows.Forms.Button();
+            this.button_history2 = new System.Windows.Forms.Button();
+            this.button_history1 = new System.Windows.Forms.Button();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage_debug = new System.Windows.Forms.TabPage();
+            this.button_resetAll = new System.Windows.Forms.Button();
             this.button_forceExit = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage_main.SuspendLayout();
             this.tabPage_toast.SuspendLayout();
+            this.tabPage_songs.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.tabPage_debug.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -121,18 +135,19 @@
             this.button_selectTextColor.UseVisualStyleBackColor = false;
             this.button_selectTextColor.Click += new System.EventHandler(this.button_selectTextColor_Click);
             // 
-            // button2
+            // button_applyAll
             // 
-            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(9, 214);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(276, 21);
-            this.button2.TabIndex = 8;
-            this.button2.Text = "Reset All";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            this.button_applyAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.button_applyAll.Enabled = false;
+            this.button_applyAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_applyAll.ForeColor = System.Drawing.Color.Black;
+            this.button_applyAll.Location = new System.Drawing.Point(9, 212);
+            this.button_applyAll.Name = "button_applyAll";
+            this.button_applyAll.Size = new System.Drawing.Size(276, 25);
+            this.button_applyAll.TabIndex = 8;
+            this.button_applyAll.Text = "Apply All";
+            this.button_applyAll.UseVisualStyleBackColor = false;
+            this.button_applyAll.Click += new System.EventHandler(this.button_applyAll_Click_1);
             // 
             // checkBox_toastMode
             // 
@@ -152,6 +167,7 @@
             this.tabControl1.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
             this.tabControl1.Controls.Add(this.tabPage_main);
             this.tabControl1.Controls.Add(this.tabPage_toast);
+            this.tabControl1.Controls.Add(this.tabPage_songs);
             this.tabControl1.Controls.Add(this.tabPage_debug);
             this.tabControl1.Location = new System.Drawing.Point(0, -1);
             this.tabControl1.Name = "tabControl1";
@@ -163,6 +179,7 @@
             // 
             this.tabPage_main.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.tabPage_main.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.tabPage_main.Controls.Add(this.checkBox_showVersion);
             this.tabPage_main.Controls.Add(this.checkBox_amountPlayed);
             this.tabPage_main.Controls.Add(this.label2);
             this.tabPage_main.Controls.Add(this.textBox_textTicks);
@@ -177,6 +194,19 @@
             this.tabPage_main.TabIndex = 0;
             this.tabPage_main.Text = "Main";
             // 
+            // checkBox_showVersion
+            // 
+            this.checkBox_showVersion.AutoSize = true;
+            this.checkBox_showVersion.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.checkBox_showVersion.ForeColor = System.Drawing.SystemColors.Control;
+            this.checkBox_showVersion.Location = new System.Drawing.Point(6, 52);
+            this.checkBox_showVersion.Name = "checkBox_showVersion";
+            this.checkBox_showVersion.Size = new System.Drawing.Size(119, 17);
+            this.checkBox_showVersion.TabIndex = 17;
+            this.checkBox_showVersion.Text = "Don\'t Show Version";
+            this.checkBox_showVersion.UseVisualStyleBackColor = true;
+            this.checkBox_showVersion.CheckedChanged += new System.EventHandler(this.checkBox_showVersion_CheckedChanged);
+            // 
             // checkBox_amountPlayed
             // 
             this.checkBox_amountPlayed.AutoSize = true;
@@ -184,9 +214,9 @@
             this.checkBox_amountPlayed.ForeColor = System.Drawing.SystemColors.Control;
             this.checkBox_amountPlayed.Location = new System.Drawing.Point(6, 29);
             this.checkBox_amountPlayed.Name = "checkBox_amountPlayed";
-            this.checkBox_amountPlayed.Size = new System.Drawing.Size(175, 17);
+            this.checkBox_amountPlayed.Size = new System.Drawing.Size(132, 17);
             this.checkBox_amountPlayed.TabIndex = 16;
-            this.checkBox_amountPlayed.Text = "Show amount played on a song";
+            this.checkBox_amountPlayed.Text = "Show Amount of Plays";
             this.checkBox_amountPlayed.UseVisualStyleBackColor = true;
             this.checkBox_amountPlayed.CheckedChanged += new System.EventHandler(this.checkBox_amountPlayed_CheckedChanged);
             // 
@@ -255,9 +285,111 @@
             this.checkBox_fadeIn.UseVisualStyleBackColor = true;
             this.checkBox_fadeIn.CheckedChanged += new System.EventHandler(this.checkBox_fadeIn_CheckedChanged);
             // 
+            // tabPage_songs
+            // 
+            this.tabPage_songs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.tabPage_songs.Controls.Add(this.tabControl2);
+            this.tabPage_songs.Location = new System.Drawing.Point(4, 25);
+            this.tabPage_songs.Name = "tabPage_songs";
+            this.tabPage_songs.Size = new System.Drawing.Size(284, 180);
+            this.tabPage_songs.TabIndex = 3;
+            this.tabPage_songs.Text = "Songs";
+            // 
+            // tabControl2
+            // 
+            this.tabControl2.Appearance = System.Windows.Forms.TabAppearance.Buttons;
+            this.tabControl2.Controls.Add(this.tabPage1);
+            this.tabControl2.Controls.Add(this.tabPage2);
+            this.tabControl2.Location = new System.Drawing.Point(0, 0);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(288, 180);
+            this.tabControl2.TabIndex = 0;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.tabPage1.Controls.Add(this.button_history5);
+            this.tabPage1.Controls.Add(this.button_history4);
+            this.tabPage1.Controls.Add(this.button_history3);
+            this.tabPage1.Controls.Add(this.button_history2);
+            this.tabPage1.Controls.Add(this.button_history1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(280, 151);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "History";
+            // 
+            // button_history5
+            // 
+            this.button_history5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+            this.button_history5.ForeColor = System.Drawing.Color.White;
+            this.button_history5.Location = new System.Drawing.Point(7, 122);
+            this.button_history5.Name = "button_history5";
+            this.button_history5.Size = new System.Drawing.Size(265, 23);
+            this.button_history5.TabIndex = 4;
+            this.button_history5.Text = "button7";
+            this.button_history5.UseVisualStyleBackColor = false;
+            // 
+            // button_history4
+            // 
+            this.button_history4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+            this.button_history4.ForeColor = System.Drawing.Color.White;
+            this.button_history4.Location = new System.Drawing.Point(7, 94);
+            this.button_history4.Name = "button_history4";
+            this.button_history4.Size = new System.Drawing.Size(265, 23);
+            this.button_history4.TabIndex = 3;
+            this.button_history4.Text = "button6";
+            this.button_history4.UseVisualStyleBackColor = false;
+            // 
+            // button_history3
+            // 
+            this.button_history3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+            this.button_history3.ForeColor = System.Drawing.Color.White;
+            this.button_history3.Location = new System.Drawing.Point(7, 65);
+            this.button_history3.Name = "button_history3";
+            this.button_history3.Size = new System.Drawing.Size(265, 23);
+            this.button_history3.TabIndex = 2;
+            this.button_history3.Text = "button5";
+            this.button_history3.UseVisualStyleBackColor = false;
+            // 
+            // button_history2
+            // 
+            this.button_history2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+            this.button_history2.ForeColor = System.Drawing.Color.White;
+            this.button_history2.Location = new System.Drawing.Point(7, 36);
+            this.button_history2.Name = "button_history2";
+            this.button_history2.Size = new System.Drawing.Size(265, 23);
+            this.button_history2.TabIndex = 1;
+            this.button_history2.Text = "button4";
+            this.button_history2.UseVisualStyleBackColor = false;
+            // 
+            // button_history1
+            // 
+            this.button_history1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(22)))), ((int)(((byte)(22)))));
+            this.button_history1.ForeColor = System.Drawing.Color.White;
+            this.button_history1.Location = new System.Drawing.Point(7, 7);
+            this.button_history1.Name = "button_history1";
+            this.button_history1.Size = new System.Drawing.Size(265, 23);
+            this.button_history1.TabIndex = 0;
+            this.button_history1.Text = "button3";
+            this.button_history1.UseVisualStyleBackColor = false;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(280, 151);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Options";
+            // 
             // tabPage_debug
             // 
             this.tabPage_debug.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.tabPage_debug.Controls.Add(this.button_resetAll);
             this.tabPage_debug.Controls.Add(this.button_forceExit);
             this.tabPage_debug.Location = new System.Drawing.Point(4, 25);
             this.tabPage_debug.Name = "tabPage_debug";
@@ -265,11 +397,25 @@
             this.tabPage_debug.TabIndex = 2;
             this.tabPage_debug.Text = "Debug";
             // 
+            // button_resetAll
+            // 
+            this.button_resetAll.BackColor = System.Drawing.Color.White;
+            this.button_resetAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button_resetAll.ForeColor = System.Drawing.Color.Black;
+            this.button_resetAll.Location = new System.Drawing.Point(8, 154);
+            this.button_resetAll.Name = "button_resetAll";
+            this.button_resetAll.Size = new System.Drawing.Size(75, 23);
+            this.button_resetAll.TabIndex = 1;
+            this.button_resetAll.Text = "Reset All";
+            this.button_resetAll.UseVisualStyleBackColor = false;
+            this.button_resetAll.Click += new System.EventHandler(this.button_resetAll_Click);
+            // 
             // button_forceExit
             // 
             this.button_forceExit.BackColor = System.Drawing.Color.White;
+            this.button_forceExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_forceExit.ForeColor = System.Drawing.Color.Black;
-            this.button_forceExit.Location = new System.Drawing.Point(105, 154);
+            this.button_forceExit.Location = new System.Drawing.Point(201, 154);
             this.button_forceExit.Name = "button_forceExit";
             this.button_forceExit.Size = new System.Drawing.Size(75, 23);
             this.button_forceExit.TabIndex = 0;
@@ -284,7 +430,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.ClientSize = new System.Drawing.Size(292, 269);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button_applyAll);
             this.Controls.Add(this.button1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Options";
@@ -296,6 +442,9 @@
             this.tabPage_main.PerformLayout();
             this.tabPage_toast.ResumeLayout(false);
             this.tabPage_toast.PerformLayout();
+            this.tabPage_songs.ResumeLayout(false);
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
             this.tabPage_debug.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -308,7 +457,7 @@
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button button_selectColor;
         private System.Windows.Forms.Button button_selectTextColor;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button_applyAll;
         private System.Windows.Forms.CheckBox checkBox_toastMode;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage_main;
@@ -321,5 +470,16 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox_textTicks;
         private System.Windows.Forms.CheckBox checkBox_amountPlayed;
+        private System.Windows.Forms.TabPage tabPage_songs;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Button button_history5;
+        private System.Windows.Forms.Button button_history4;
+        private System.Windows.Forms.Button button_history3;
+        private System.Windows.Forms.Button button_history2;
+        private System.Windows.Forms.Button button_history1;
+        private System.Windows.Forms.Button button_resetAll;
+        private System.Windows.Forms.CheckBox checkBox_showVersion;
     }
 }
