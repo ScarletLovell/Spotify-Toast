@@ -1,5 +1,5 @@
 # Spotify-Toast [![HitCount](http://hits.dwyl.io/Anthonyrules144/Spotify-Toast.svg)](http://hits.dwyl.io/Anthonyrules144/Spotify-Toast)
-Version compare: </br>
+An always on-top toast application for your current song, artist, time, and album art
 
 # Why did I make this?
 Some of the applications that are used for Spotify similar to this aren't updated to todays standards. So I figured, why not make my own.
@@ -34,4 +34,3 @@ You can also do whatever you want with my code, just give me credit, I'd appreci
 v1.1.7             |  v2.0
 :-------------------------:|:-------------------------:
 ![image](https://i.imgur.com/VtcgmLB.png)  |  ![image](https://i.imgur.com/FVxOKXz.png)
-An always on-top toast application for your current song, artist, time, and album art
