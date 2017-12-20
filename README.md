@@ -1,19 +1,6 @@
 # Spotify-Toast [![HitCount](http://hits.dwyl.io/Anthonyrules144/Spotify-Toast.svg)](http://hits.dwyl.io/Anthonyrules144/Spotify-Toast)
 Version compare: </br>
 
-v1.1.7             |  v2.0
-:-------------------------:|:-------------------------:
-![image](https://i.imgur.com/VtcgmLB.png)  |  ![image](https://i.imgur.com/FVxOKXz.png)
-An always on-top toast application for your current song, artist, time, and album art
-
-# Working
-| OS            | Debug/Release | Name     |
-|:-------------:|:-------------:|:--------:|
-| Windows x64   | Release       | Working  |
-| Windows x64   | Debug         | Working  |
-| Linux 16.04   | Debug         | ![travis](https://travis-ci.org/Anthonyrules144/Spotify-Toast.svg?branch=master)  |
-| Linux 14.04   | Debug         | ![travis](https://travis-ci.org/Anthonyrules144/Spotify-Toast.svg?branch=master)  |
-
 # Why did I make this?
 Some of the applications that are used for Spotify similar to this aren't updated to todays standards. So I figured, why not make my own.
 
@@ -43,3 +30,8 @@ If you would like to download the latest exe, it can be found [in the downloads]
 ### Interested in the source code?
 I used SpotifyAPI-Net, you can find it [here](https://github.com/johnnycrazy/SpotifyAPI-NET)<br/>
 You can also do whatever you want with my code, just give me credit, I'd appreciate it.
+
+v1.1.7             |  v2.0
+:-------------------------:|:-------------------------:
+![image](https://i.imgur.com/VtcgmLB.png)  |  ![image](https://i.imgur.com/FVxOKXz.png)
+An always on-top toast application for your current song, artist, time, and album art
