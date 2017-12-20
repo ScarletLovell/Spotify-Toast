@@ -41,19 +41,21 @@
             // text_songName
             // 
             this.text_songName.AutoSize = true;
-            this.text_songName.Font = new System.Drawing.Font("Nirmala UI Semilight", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.text_songName.Font = new System.Drawing.Font("Nirmala UI", 15F);
             this.text_songName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.text_songName.Location = new System.Drawing.Point(75, 9);
             this.text_songName.Name = "text_songName";
-            this.text_songName.Size = new System.Drawing.Size(112, 28);
+            this.text_songName.Size = new System.Drawing.Size(115, 28);
             this.text_songName.TabIndex = 0;
             this.text_songName.Text = "Song Name";
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(2, 2);
+            this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(70, 64);
+            this.pictureBox1.Size = new System.Drawing.Size(64, 60);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
@@ -73,7 +75,7 @@
             this.label_version.AutoSize = true;
             this.label_version.Font = new System.Drawing.Font("Nirmala UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label_version.ForeColor = System.Drawing.Color.DimGray;
-            this.label_version.Location = new System.Drawing.Point(246, 55);
+            this.label_version.Location = new System.Drawing.Point(246, 56);
             this.label_version.Name = "label_version";
             this.label_version.Size = new System.Drawing.Size(45, 13);
             this.label_version.TabIndex = 4;
@@ -85,7 +87,7 @@
             // text_amountOfPlays
             // 
             this.text_amountOfPlays.AutoSize = true;
-            this.text_amountOfPlays.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.25F);
+            this.text_amountOfPlays.Font = new System.Drawing.Font("Nirmala UI", 6.25F);
             this.text_amountOfPlays.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.text_amountOfPlays.Location = new System.Drawing.Point(270, 2);
             this.text_amountOfPlays.Name = "text_amountOfPlays";
@@ -96,13 +98,13 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.25F);
+            this.label1.Font = new System.Drawing.Font("Nirmala UI", 6F);
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label1.Location = new System.Drawing.Point(239, 2);
+            this.label1.Location = new System.Drawing.Point(240, 2);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(31, 12);
+            this.label1.Size = new System.Drawing.Size(31, 11);
             this.label1.TabIndex = 6;
-            this.label1.Text = "Plays:";
+            this.label1.Text = "# Plays:";
             // 
             // Form1
             // 

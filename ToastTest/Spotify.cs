@@ -11,13 +11,23 @@ namespace ToastTest
         public SpotifyWebAPI _spotifyWeb;
         public Form1 form1 = null;
 
+        private Timer timer = new Timer() { Interval = 5 };
+        bool cantLoad = true;
         public bool Spotify_Load(Form1 form) {
-            if(!SpotifyLocalAPI.IsSpotifyRunning() || !SpotifyLocalAPI.IsSpotifyWebHelperRunning() || !this._spotify.Connect()) {
+            if(!SpotifyLocalAPI.IsSpotifyRunning() || !SpotifyLocalAPI.IsSpotifyWebHelperRunning()) {
                 DialogResult result = MessageBox.Show("Unable to connect to spotify, retry?", "Spotify Toast", MessageBoxButtons.YesNo);
                 if(result == DialogResult.Yes)
                     return Spotify_Load(form);
                 return false;
             }
+            cantLoad = this._spotify.Connect();
+            if(!cantLoad) {
+                DialogResult result = MessageBox.Show("Unable to connect to spotify, retry?", "Spotify Toast", MessageBoxButtons.YesNo);
+                if(result == DialogResult.Yes)
+                    return Spotify_Load(form);
+                return false;
+            }
+            timer.Tick += new EventHandler(this.FireTimer);
             form1 = form;
             this._spotify.ListenForEvents = true;
             this._spotify.SynchronizingObject = form1;
@@ -34,10 +44,15 @@ namespace ToastTest
                 form1.Fade(e.Playing);
             }
         }
+        private void FireTimer(object sender, EventArgs e) {
+            timer.Stop();
+            form1.UpdateTrack(true);
+        }
         /// <summary>Spotify event</summary>
         private void _spotify_OnTrackChange(object sender, TrackChangeEventArgs e) {
-            if(_spotify == null || form1 != null)
-                form1.UpdateTrack();
+            if(_spotify == null || form1 != null) {
+                timer.Start();
+            }
         }
         /// <summary>Spotify event</summary>
         private void _spotify_OnTrackTimeChange(object sender, TrackTimeChangeEventArgs e) {

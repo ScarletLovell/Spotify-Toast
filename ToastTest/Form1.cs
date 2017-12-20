@@ -15,7 +15,7 @@ namespace ToastTest
     using System.IO;
     using System.Linq;
 
-    public partial class Form1 : Form {
+    public partial class Form1 : Form, IMessageFilter {
 
         public static List<Song> songHistory { get;set; }
         /// <summary>The way to make the app force ontop of all apps</summary>
@@ -24,13 +24,20 @@ namespace ToastTest
         }
         int width = SystemInformation.VirtualScreen.Width;
         int height = SystemInformation.VirtualScreen.Height;
-        static Configuration configManager = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-        KeyValueConfigurationCollection confFile = configManager.AppSettings.Settings;
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+        public const int WM_LBUTTONDOWN = 0x0201;
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        [System.Runtime.InteropServices.DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
         protected override CreateParams CreateParams
         { // https://stackoverflow.com/a/26607006 , I couldn't figure this out on my own.
             get {
                 var cp = base.CreateParams;
-                if(confFile["alwaysOnTop"] != null && confFile["alwaysOnTop"].Value.ToLower().Equals("false")) {
+                if(!JsonOptions.GetAllOptions() || JsonOptions.GetOption("alwaysOnTop") != "true") {
                     return cp;
                 }
                 cp.ExStyle |= 8;  // Turn on WS_EX_TOPMOST
@@ -39,7 +46,6 @@ namespace ToastTest
         }
         public static Options options;
         private int trackNameLength;
-        private string spaces = "              ";
         private string trackName;
         private int scroll = 0;
         Spotify Spotify = new Spotify();
@@ -70,17 +76,95 @@ namespace ToastTest
             public string name { get; set; }
             public int plays { get; set; }
         };
+        List<string> SongsByArtist = new List<string>();
+        bool noBorder = false;
+        public void load(bool colors) {
+            Console.WriteLine("load up");
+            if(JsonOptions.GetAllOptions()) {
+                if(colors)
+                    SetColors();
+                if(JsonOptions.GetOption("showSongBorder") != "") {
+                    bool songBorder = JsonOptions.GetOption("showSongBorder").Equals("true");
+                    pictureBox1.BorderStyle = (songBorder ? BorderStyle.Fixed3D : BorderStyle.None);
+                }
+                if(JsonOptions.GetOption("disableBorder") != "") {
+                    noBorder = bool.Parse(JsonOptions.GetOption("disableBorder"));
+                    this.FormBorderStyle = (noBorder ? FormBorderStyle.None : FormBorderStyle.FixedToolWindow);
+                }
+                if(JsonOptions.GetOption("barColor") != "") {
+                    int[] cS = Array.ConvertAll(JsonOptions.GetOption("barColor").Split(new[] { " " }, StringSplitOptions.None), int.Parse);
+                    progressBar1.BarColor = Color.FromArgb(255, cS[0], cS[1], cS[2]);
+                }
+                if(JsonOptions.GetOption("barHeight") != "") {
+                    int barHeight = int.Parse(JsonOptions.GetOption("barHeight"));
+                    progressBar1.Size = new Size(this.Size.Width, 3 + barHeight);
+                    progressBar1.Location = new Point(0, 69 - barHeight);
+                    label_version.Location = new Point(246, 55 - barHeight);
+                }
+                if(this.toast_isEnabled || JsonOptions.GetOption("toastMode").Equals("true")) {
+                    this.ShowInTaskbar = false;
+                    string btt = "Spotify Toast";
+                    string _btt = "Spotify Toast is now hidden to the system tray";
+                    notify.ShowBalloonTip(5000, btt, _btt, ToolTipIcon.Info);
+                    toast_isEnabled = true;
+                    this.FormBorderStyle = FormBorderStyle.None;
+                    if(!this.toast_fadeIn)
+                        this.Location = new Point(width - 300, height);
+                    else
+                        this.BackColor = Color.FromArgb(0, 255, 255, 255);
+                    toast_timer.Tick += new EventHandler(this.TimerTick_Toast_Push);
+                    toast_timer.Start();
+                } else if(toast_isEnabled) {
+                    this.ShowInTaskbar = true;
+                    this.toast_isEnabled = false;
+                    this.CenterToScreen();
+                    toast_timer.Stop();
+                }
+                if(JsonOptions.GetOption("dontShowVersion") != "") {
+                    label_version.Visible = !JsonOptions.GetOption("dontShowVersion").Equals("true");
+                }
+                if(JsonOptions.GetOption("showAmountOfPlays") != "") {
+                    label1.Visible = JsonOptions.GetOption("showAmountOfPlays").Equals("true");
+                    text_amountOfPlays.Visible = JsonOptions.GetOption("showAmountOfPlays").Equals("true");
+                }
+                if(JsonOptions.GetOption("textTicks") != "") {
+                    int tick = 250;
+                    if(!int.TryParse(JsonOptions.GetOption("textTicks"), out tick))
+                        tick = 250;
+                    if(this.scroll_timer.Interval != tick)
+                        this.scroll_timer.Interval = tick;
+                }
+            }
+            if(newLocation != null)
+                this.Location = (Point)newLocation;
+        }
+        private HashSet<Control> dragControls = new HashSet<Control>();
+        public bool PreFilterMessage(ref Message m) {
+            if(m.Msg == WM_LBUTTONDOWN && dragControls.Contains(Control.FromHandle(m.HWnd)) && noBorder) {
+                ReleaseCapture();
+                SendMessage(this.Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                return true;
+            }
+            return false;
+        }
         private void Form1_Load(object sender, EventArgs e) {
             if(!Spotify.Spotify_Load(this))
                 return;
+            Application.AddMessageFilter(this);
+            dragControls.Add(this);
+            dragControls.Add(text_artistName);
+            dragControls.Add(text_songName);
+            dragControls.Add(text_amountOfPlays);
+            dragControls.Add(label1);
+            dragControls.Add(pictureBox1);
             progressBar1.Size = new Size(this.Size.Width, 3);
             progressBar1.Click += progressBar1_Click;
             progressBar1.Parent = this;
-            /*notify.BalloonTipClosed += (_sender, _e) => {
-                var thisIcon = (NotifyIcon) _sender;
-                thisIcon.Visible = false;
-                thisIcon.Dispose();
-            };*/
+
+            scroll_timer.Tick += new EventHandler(this.TimerTick_Scroll);
+            scroll_timer.Start();
+            label_version.Text = "v" + ToastTest.Program.version;
+            load(false);
             if(notify.ContextMenu == null) {
                 notify.DoubleClick += new EventHandler(this.notify_click);
                 this.notify_contextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] { this.notify_menu1 });
@@ -93,27 +177,12 @@ namespace ToastTest
                 this.notify_menu2.Click += new System.EventHandler(this.notify_menu1_close);
             }
             notify.ContextMenu = this.notify_contextMenu;
-            if(this.toast_isEnabled || confFile["toastMode"] != null && confFile["toastMode"].Value.ToLower().Equals("true")) {
-                this.ShowInTaskbar = false;
-                string btt = "Spotify Toast";
-                string _btt = "Spotify Toast is now hidden to the system tray";
-                notify.ShowBalloonTip(5000, btt, _btt, ToolTipIcon.Info);
-                this.toast_isEnabled = true;
-                this.FormBorderStyle = FormBorderStyle.None;
-                if(!this.toast_fadeIn)
-                    this.Location = new Point(width - 300, height);
-                else
-                    this.BackColor = Color.FromArgb(0, 255, 255, 255);
-                toast_timer.Tick += new EventHandler(this.TimerTick_Toast_Push);
-                toast_timer.Start();
-            }
-            if(confFile["showVersion"] != null && confFile["showVersion"].Value.ToLower().Equals("true")) {
-                label_version.Visible = false;
-            }
-            if(confFile["showAmountOfPlays"] == null || !confFile["showAmountOfPlays"].Value.ToLower().Equals("true")) {
-                label1.Visible = false;
-                text_amountOfPlays.Visible = false;
-            } else {
+            /*notify.BalloonTipClosed += (_sender, _e) => {
+                var thisIcon = (NotifyIcon) _sender;
+                thisIcon.Visible = false;
+                thisIcon.Dispose();
+            };*/
+            if(JsonOptions.GetOption("showAmountOfPlays").Equals("true")) {
                 JsonSerializer serializer = new JsonSerializer();
                 using(FileStream fs = File.Open("./songs.json", FileMode.Open))
                 using(StreamReader sr = new StreamReader(fs))
@@ -129,23 +198,12 @@ namespace ToastTest
                             songs.Add(song);
                         }
                     }
+                    reader.Close();
+                    sr.Close();
                     fs.Close();
                 }
             }
-            if(newLocation != null)
-                this.Location = (Point)newLocation;
-            UpdateTrack();
-            //Fade(_spotify.GetStatus().Playing);
-            if(confFile["textTicks"] != null && confFile["textTicks"].Value != null) {
-                int tick = 250;
-                if(!int.TryParse(confFile["textTicks"].Value, out tick))
-                    tick = 250;
-                if(this.scroll_timer.Interval != tick)
-                    this.scroll_timer.Interval = tick;
-            }
-            scroll_timer.Tick += new EventHandler(this.TimerTick_Scroll);
-            scroll_timer.Start();
-            label_version.Text = "v" + ToastTest.Program.version;
+            UpdateTrack(true);
             Console.WriteLine("Spotify Toast started");
         }
 
@@ -161,6 +219,14 @@ namespace ToastTest
                 options.Activate();
                 if(!this.toast_isEnabled)
                     options.Location = this.Location;
+                else {
+                    Screen screen = Screen.FromControl(this);
+                    Rectangle workingArea = screen.WorkingArea;
+                    this.Location = new Point() {
+                        X = Math.Max(workingArea.X, workingArea.X + (workingArea.Width - this.Width) / 2),
+                        Y = Math.Max(workingArea.Y, workingArea.Y + (workingArea.Height - this.Height) / 2)
+                    };
+                }
             }
         }
 
@@ -189,11 +255,10 @@ namespace ToastTest
         /// <summary>Update all info on the track
         /// <para><see cref="SpotifyLocalAPI.GetStatus()"/></para>
         /// </summary>
-        public void UpdateTrack() {
+        public void UpdateTrack(bool canAdd) {
             if(bp != null)
                 bp.Dispose();
             if(this.toast_isEnabled) {
-                Console.WriteLine("Toastiest");
                 toast_timer.Start();
             }
             if(_spotify.GetStatus().Track != null && _spotify.GetStatus().Track.Length > 0 && _spotify.GetStatus().Running) {
@@ -209,11 +274,11 @@ namespace ToastTest
                 progressBar1.Maximum = 0;
                 return;
             }
-            text_songName.Text = (trackName = _spotify.GetStatus().Track.TrackResource.Name + spaces);
+            text_songName.Text = (trackName = _spotify.GetStatus().Track.TrackResource.Name + "              ");
             trackNameLength = trackName.Length;
             text_artistName.Text = _spotify.GetStatus().Track.ArtistResource.Name;
             progressBar1.Maximum = _spotify.GetStatus().Track.Length;
-            if(confFile["showAmountOfPlays"] != null && confFile["showAmountOfPlays"].Value.ToLower().Equals("true")) {
+            if(JsonOptions.GetOption("showAmountOfPlays").Equals("true") && canAdd) {
                 int plays = 1;
                 string songName = text_songName.Text.Trim();
                 if(songName.Length > 10) {
@@ -285,26 +350,40 @@ namespace ToastTest
 
         private Color currentColor;
         private void SetColors() {
-            if(confFile["changeColorWithSong"] == null || confFile["changeColorWithSong"].Value.ToLower().Equals("true")) {
+            if(JsonOptions.GetOption("changeColorWithSong").Equals("true")) {
                 try {
                     Color color = GetMostFrequentPixels((Bitmap)bp);
-                    int rV = 255 - color.R;
-                    int gV = 255 - color.G;
-                    int bV = 255 - color.B;
-                    Color invert = Color.FromArgb(255, rV, gV, bV);
+                    double rV = 255 - color.R; // R
+                    double gV = 255 - color.G; // G
+                    double bV = 255 - color.B; // B
+                    double rV_comp = rV - color.R; // color - whatever color was inverted
+                    double gV_comp = rV - color.G;
+                    double bV_comp = bV - color.B;
+                    Console.WriteLine(rV_comp + " " + gV_comp + " " + bV_comp);
+                    if(rV_comp <= 50 && rV_comp >= -50)
+                        rV += (rV <= 55 ? 200 : (rV > 200 ? -150 : (rV > 100 ? -100 : -50)));
+                    if(gV_comp <= 50 && gV_comp >= -50)
+                        gV += (gV <= 55 ? 200 : (gV > 200 ? -150 : (gV > 100 ? -100 : -50)));
+                    if(bV_comp <= 50 && bV_comp >= -50)
+                        bV += (bV <= 55 ? 200 : (bV > 200 ? -150 : (bV > 100 ? -100 : -50)));
+                    Console.WriteLine(rV + ", " + color.R);
+                    Console.WriteLine(gV + ", " + color.G);
+                    Console.WriteLine(bV + ", " + color.B);
+                    Color invert = Color.FromArgb(255, (int) rV, (int) gV, (int) bV);
                     //progressBar1.BarColor = invert;
                     text_songName.ForeColor = invert;
                     text_artistName.ForeColor = invert;
                     label1.ForeColor = invert;
+                    label_version.ForeColor = invert;
                     text_amountOfPlays.ForeColor = invert;
                     this.BackColor = currentColor = Color.FromArgb(this.toast_fadeIn ? this.BackColor.A : color.A, color.R, color.G, color.B);
                 }
                 catch(Exception e) { Console.WriteLine(e.Message); }
             } else {
-                if(confFile["defaultColor"] != null) {
-                    int[] cS = Array.ConvertAll(confFile["defaultColor"].Value.Split(new[] { " " }, StringSplitOptions.None), int.Parse);
+                if(JsonOptions.GetOption("defaultColor") != "") {
+                    int[] cS = Array.ConvertAll(JsonOptions.GetOption("defaultColor").Split(new[] { " " }, StringSplitOptions.None), int.Parse);
                     Color color = Color.FromArgb(255, cS[0], cS[1], cS[2]);
-                    if(confFile["defaultTextColor"] == null || !confFile["defaultTextColor"].Value.ToLower().Equals("true")) {
+                    if(!JsonOptions.GetOption("defaultTextColor").Equals("true")) {
                         Color invert = Color.FromArgb(255, 255 - color.R, 255 - color.G, 255 - color.B);
                         //progressBar1.BarColor = invert;
                         text_songName.ForeColor = invert;
@@ -312,8 +391,8 @@ namespace ToastTest
                     }
                     this.BackColor = currentColor = Color.FromArgb(this.toast_fadeIn ? this.BackColor.A : color.A, color.R, color.G, color.B);
                 }
-                if(confFile["defaultTextColor"] != null) {
-                    int[] cS = Array.ConvertAll(confFile["defaultTextColor"].Value.Split(new[] { " " }, StringSplitOptions.None), int.Parse);
+                if(JsonOptions.GetOption("defaultTextColor") != "") {
+                    int[] cS = Array.ConvertAll(JsonOptions.GetOption("defaultTextColor").Split(new[] { " " }, StringSplitOptions.None), int.Parse);
                     Color color = Color.FromArgb(255, cS[0], cS[1], cS[2]);
                     text_songName.ForeColor = color;
                     text_artistName.ForeColor = color;
