@@ -79,7 +79,9 @@ namespace ToastTest
         List<string> SongsByArtist = new List<string>();
         bool noBorder = false;
         public void load(bool colors) {
+        // wow this part is bad.
             Console.WriteLine("load up");
+            toast_timer.Stop();
             if(JsonOptions.GetAllOptions()) {
                 if(colors)
                     SetColors();
@@ -108,9 +110,7 @@ namespace ToastTest
                     notify.ShowBalloonTip(5000, btt, _btt, ToolTipIcon.Info);
                     toast_isEnabled = true;
                     this.FormBorderStyle = FormBorderStyle.None;
-                    if(!this.toast_fadeIn)
-                        this.Location = new Point(width - 300, height);
-                    else
+                    if(this.toast_fadeIn)
                         this.BackColor = Color.FromArgb(0, 255, 255, 255);
                     toast_timer.Tick += new EventHandler(this.TimerTick_Toast_Push);
                     toast_timer.Start();
@@ -134,13 +134,44 @@ namespace ToastTest
                     if(this.scroll_timer.Interval != tick)
                         this.scroll_timer.Interval = tick;
                 }
+                if(JsonOptions.GetOption("toastTicks") != "") {
+                    int tick = 5;
+                    if(int.TryParse(JsonOptions.GetOption("toastTicks"), out tick)) {
+                        toast_timer.Interval = tick;
+                    }
+                }
+                if(JsonOptions.GetOption("toastStickTime") != "") {
+                    int tick = 5;
+                    if(int.TryParse(JsonOptions.GetOption("toastStickTime"), out tick)) {
+                        toast_stickTime = tick;
+                    }
+                }
+                if(JsonOptions.GetOption("toastPosition") != "") {
+                    string pos = JsonOptions.GetOption("toastPosition");
+                    if(pos == "Bottom Right") {
+                        toast_placement = toastPlacement.bottom_right;
+                    } else if(pos == "Bottom Left") {
+                        toast_placement = toastPlacement.bottom_left;
+                    } else if(pos == "Bottom Center") {
+                        toast_placement = toastPlacement.bottom_center;
+                    } else if(pos == "Top Left") {
+                        toast_placement = toastPlacement.top_left;
+                    } else if(pos == "Top Center") {
+                        toast_placement = toastPlacement.top_center;
+                    } else if(pos == "Top Right") {
+                        toast_placement = toastPlacement.top_right;
+                    }
+                }
             }
             if(newLocation != null)
                 this.Location = (Point)newLocation;
+            UpdateTrack(true);
         }
         private HashSet<Control> dragControls = new HashSet<Control>();
         public bool PreFilterMessage(ref Message m) {
             if(m.Msg == WM_LBUTTONDOWN && dragControls.Contains(Control.FromHandle(m.HWnd)) && noBorder) {
+                if(toast_isEnabled)
+                    return false;
                 ReleaseCapture();
                 SendMessage(this.Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
                 return true;
@@ -203,7 +234,6 @@ namespace ToastTest
                     fs.Close();
                 }
             }
-            UpdateTrack(true);
             Console.WriteLine("Spotify Toast started");
         }
 
@@ -222,10 +252,10 @@ namespace ToastTest
                 else {
                     Screen screen = Screen.FromControl(this);
                     Rectangle workingArea = screen.WorkingArea;
-                    this.Location = new Point() {
+                    /*this.Location = new Point() {
                         X = Math.Max(workingArea.X, workingArea.X + (workingArea.Width - this.Width) / 2),
                         Y = Math.Max(workingArea.Y, workingArea.Y + (workingArea.Height - this.Height) / 2)
-                    };
+                    };*/
                 }
             }
         }
@@ -403,23 +433,51 @@ namespace ToastTest
 
         public Timer toast_timer = new Timer() { Interval = 5 };
         private int toast_ticks = 0;
+        private int toast_stickTime = 120;
         private bool toast_isOnTop = false;
+        enum toastPlacement : int {
+            bottom_right = 0,
+            bottom_center = 1,
+            bottom_left = 2,
+            top_right = 3,
+            top_center = 4,
+            top_left = 5
+        };
+        private toastPlacement toast_placement = toastPlacement.bottom_right;
+        bool isNewToast = true;
         /// <summary>Make the toast push up from the screen</summary>
         private void TimerTick_Toast_Push(object sender, EventArgs e) {
             int x = this.Location.X;
             int y = this.Location.Y;
             int width = SystemInformation.VirtualScreen.Width;
             int height = SystemInformation.VirtualScreen.Height;
+            int down = height - 120;
+            if(isNewToast && x != width) {
+                isNewToast = false;
+                if(toast_placement == toastPlacement.bottom_right) {
+                    this.Location = new Point(width - 300, down);
+                } else if(toast_placement == toastPlacement.bottom_center) {
+                    this.Location = new Point(width / 2 - (this.Size.Width / 2), down);
+                } else if(toast_placement == toastPlacement.bottom_left) {
+                    this.Location = new Point(width - width + 10, down);
+                }/* else if(toast_placement == toastPlacement.top_right) {
+                    this.Location = new Point(width / 2, y);
+                } else if(toast_placement == toastPlacement.top_center) {
+                    this.Location = new Point(width / 2, y);
+                } else if(toast_placement == toastPlacement.top_left) {
+                    this.Location = new Point(width / 2, y);
+                }*/
+            }
             if(!this.toast_fadeIn) { 
-                if(x <= (width - 300) && y <= (height - 120) && !toast_isOnTop) {
+                if(y <= (height - 120) && !toast_isOnTop) {
                     toast_ticks += 1;
-                    if(toast_ticks >= 65)
+                    if(toast_ticks >= toast_stickTime)
                         toast_isOnTop = true;
                     return;
-                } else if(toast_isOnTop && toast_ticks >= 65) {
+                } else if(toast_isOnTop && toast_ticks >= toast_stickTime) {
                     Point p = new Point(x, y + 1);
                     this.Location = p;
-                    if(x >= (width - 300) && y >= height) {
+                    if(y >= height) {
                         toast_isOnTop = false;
                         toast_ticks = 0;
                         toast_timer.Stop();
@@ -431,10 +489,10 @@ namespace ToastTest
             } else { 
                 if(this.BackColor.A >= 255 && !toast_isOnTop) {
                     toast_ticks += 1;
-                    if(toast_ticks >= 65)
+                    if(toast_ticks >= toast_stickTime)
                         toast_isOnTop = true;
                     return;
-                } else if(toast_isOnTop && toast_ticks >= 65) {
+                } else if(toast_isOnTop && toast_ticks >= toast_stickTime) {
                     this.BackColor = this.BackColor = Color.FromArgb(BackColor.A - 1, BackColor.R, BackColor.G, BackColor.B);
                     if(this.BackColor.A >= 255) {
                         toast_isOnTop = false;

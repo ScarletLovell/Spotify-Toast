@@ -10,7 +10,7 @@ namespace ToastTest
     static class Program
     {
         public static bool doContinue { get; set; }
-        public static string version = "2.0";
+        public static string version = "2.1";
 
         [STAThread]
         static void Main() {

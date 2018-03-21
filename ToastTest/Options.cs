@@ -54,7 +54,6 @@ namespace ToastTest
                 button_selectColor.Visible = true;
                 button_selectTextColor.Visible = true;
             }
-            bool toastMode = false;
             if(JsonOptions.GetOption("toastMode") != "") {
                 checkBox_toastMode.Checked = toastMode = JsonOptions.GetOption("toastMode").Equals("true");
             }
@@ -63,8 +62,40 @@ namespace ToastTest
                     checkBox_toast_fadeIn.Visible = true;
                     checkBox_toast_fadeIn.Checked = JsonOptions.GetOption("toastMode_fadeIn").Equals("true");
                 }
+                if(JsonOptions.GetOption("toastTicks") != "") {
+                    int toastTicks;
+                    string ticks = JsonOptions.GetOption("toastTicks");
+                    if(int.TryParse(ticks, out toastTicks)) {
+                        defaultToastTicks = toastTicks;
+                        textBox_ticks.Text = ticks;
+                    } else {
+                        textBox_ticks.Text = "5";
+                    }
+                } else {
+                    textBox_ticks.Text = "5";
+                }
+                if(JsonOptions.GetOption("toastStickTime") != "") {
+                    int toastTicks;
+                    string ticks = JsonOptions.GetOption("toastStickTime");
+                    if(int.TryParse(ticks, out toastTicks)) {
+                        defaultToastStickTime = toastTicks;
+                        textBox_toastStickTime.Text = ticks;
+                    } else {
+                        textBox_toastStickTime.Text = "120";
+                    }
+                } else {
+                    textBox_toastStickTime.Text = "120";
+                }
             } else {
                 checkBox_toast_fadeIn.Visible = false;
+                textBox_ticks.Visible = false;
+                textBox_toastStickTime.Visible = false;
+                comboBox_toastPosition.Visible = false;
+                label4.Visible = false;
+                label1.Visible = false;
+            }
+            if(JsonOptions.GetOption("toastPosition") != "") {
+                defaultToastPosition = JsonOptions.GetOption("toastPosition");
             }
             if(JsonOptions.GetOption("showAmountOfPlays") != "") {
                 checkBox_amountPlayed.Checked = JsonOptions.GetOption("showAmountOfPlays").Equals("true");
@@ -100,7 +131,7 @@ namespace ToastTest
         private bool fadeIn = false;
         private bool applyByRestart = false;
         private void ApplyOptions() {
-            if(applyByRestart) {
+            if(applyByRestart || toastWasUpdated || toastMode) {
                 Application.Restart();
                 return;
             }
@@ -231,6 +262,51 @@ namespace ToastTest
             setCanUpdate(true);
         }
 
+        bool updatingText = false;
+        bool toastWasUpdated = false;
+        int defaultToastTicks = 5;
+        private void textBox_ticks_TextChanged(object sender, EventArgs e) {
+            if(updatingChecks || updatingText)
+                return;
+            string text = textBox_ticks.Text;
+            int tick = defaultToastTicks;
+            if(int.TryParse(text, out tick)) {
+                if(tick != defaultToastTicks) {
+                    setCanUpdate(true);
+                    toastWasUpdated = true;
+                }
+            } else {
+                updatingText = true;
+                textBox_ticks.Text = defaultToastTicks.ToString();
+            }
+            updatingText = false;
+        }
+        int defaultToastStickTime = 120;
+        private void textBox_toastStickTime_TextChanged(object sender, EventArgs e) {
+            if(updatingChecks)
+                return;
+            string text = textBox_toastStickTime.Text;
+            int tick = defaultToastStickTime;
+            if(int.TryParse(text, out tick)) {
+                if(tick != defaultToastStickTime) {
+                    setCanUpdate(true);
+                    toastWasUpdated = true;
+                }
+            } else {
+                updatingText = true;
+                textBox_toastStickTime.Text = defaultToastStickTime.ToString();
+            }
+            updatingText = false;
+        }
+        string defaultToastPosition = "Bottom Right";
+        private void comboBox_toastPosition_SelectedIndexChanged(object sender, EventArgs e) {
+            string text = comboBox_toastPosition.GetItemText(comboBox_toastPosition.SelectedItem);
+            if(text != defaultToastPosition) {
+                defaultToastPosition = text;
+                setCanUpdate(true);
+            }
+        }
+
         private void button_forceExit_Click(object sender, EventArgs e) {
             form1.close();
         }
@@ -252,6 +328,9 @@ namespace ToastTest
             SetSetting("showAmountOfPlays", checkBox_amountPlayed.Checked.ToString().ToLower());
             SetSetting("toastMode_fadeIn", checkBox_toastMode.Checked.ToString().ToLower());
             SetSetting("toastMode", checkBox_toastMode.Checked.ToString().ToLower());
+            SetSetting("toastTicks", textBox_ticks.Text);
+            SetSetting("toastPosition", defaultToastPosition);
+            SetSetting("toastStickTime", textBox_toastStickTime.Text);
             SetSetting("changeColorWithSong", checkBox_changeColorWithSong.Checked.ToString().ToLower());
             SetSetting("alwaysOnTop", checkBox_alwaysOnTop.Checked.ToString().ToLower());
             SetSetting("dontShowVersion", checkBox_showVersion.Checked.ToString().ToLower());

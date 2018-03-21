@@ -51,6 +51,8 @@
             this.button_selectColor = new System.Windows.Forms.Button();
             this.checkBox_changeColorWithSong = new System.Windows.Forms.CheckBox();
             this.tabPage_toast = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBox_toastStickTime = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_ticks = new System.Windows.Forms.TextBox();
             this.checkBox_toast_fadeIn = new System.Windows.Forms.CheckBox();
@@ -66,6 +68,7 @@
             this.tabPage_debug = new System.Windows.Forms.TabPage();
             this.button_resetAll = new System.Windows.Forms.Button();
             this.button_forceExit = new System.Windows.Forms.Button();
+            this.comboBox_toastPosition = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage_main.SuspendLayout();
             this.tabControl3.SuspendLayout();
@@ -349,6 +352,9 @@
             // tabPage_toast
             // 
             this.tabPage_toast.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
+            this.tabPage_toast.Controls.Add(this.comboBox_toastPosition);
+            this.tabPage_toast.Controls.Add(this.label4);
+            this.tabPage_toast.Controls.Add(this.textBox_toastStickTime);
             this.tabPage_toast.Controls.Add(this.label1);
             this.tabPage_toast.Controls.Add(this.textBox_ticks);
             this.tabPage_toast.Controls.Add(this.checkBox_toast_fadeIn);
@@ -360,15 +366,35 @@
             this.tabPage_toast.TabIndex = 1;
             this.tabPage_toast.Text = "Toast Settings";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.Location = new System.Drawing.Point(161, 35);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(82, 13);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Stick Time (ms):";
+            // 
+            // textBox_toastStickTime
+            // 
+            this.textBox_toastStickTime.Location = new System.Drawing.Point(243, 32);
+            this.textBox_toastStickTime.MaxLength = 5;
+            this.textBox_toastStickTime.Name = "textBox_toastStickTime";
+            this.textBox_toastStickTime.Size = new System.Drawing.Size(35, 20);
+            this.textBox_toastStickTime.TabIndex = 14;
+            this.textBox_toastStickTime.Text = "65";
+            this.textBox_toastStickTime.TextChanged += new System.EventHandler(this.textBox_toastStickTime_TextChanged);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(201, 10);
+            this.label1.Location = new System.Drawing.Point(185, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(36, 13);
+            this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 13;
-            this.label1.Text = "Ticks:";
+            this.label1.Text = "Ticks (ms):";
             // 
             // textBox_ticks
             // 
@@ -377,7 +403,8 @@
             this.textBox_ticks.Name = "textBox_ticks";
             this.textBox_ticks.Size = new System.Drawing.Size(35, 20);
             this.textBox_ticks.TabIndex = 12;
-            this.textBox_ticks.Text = "65";
+            this.textBox_ticks.Text = "5";
+            this.textBox_ticks.TextChanged += new System.EventHandler(this.textBox_ticks_TextChanged);
             // 
             // checkBox_toast_fadeIn
             // 
@@ -534,6 +561,21 @@
             this.button_forceExit.UseVisualStyleBackColor = false;
             this.button_forceExit.Click += new System.EventHandler(this.button_forceExit_Click);
             // 
+            // comboBox_toastPosition
+            // 
+            this.comboBox_toastPosition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBox_toastPosition.FormattingEnabled = true;
+            this.comboBox_toastPosition.Items.AddRange(new object[] {
+            "Bottom Right",
+            "Bottom Center",
+            "Bottom Left"});
+            this.comboBox_toastPosition.Location = new System.Drawing.Point(6, 52);
+            this.comboBox_toastPosition.Name = "comboBox_toastPosition";
+            this.comboBox_toastPosition.Size = new System.Drawing.Size(117, 21);
+            this.comboBox_toastPosition.TabIndex = 16;
+            this.comboBox_toastPosition.Text = "Position of toast";
+            this.comboBox_toastPosition.SelectedIndexChanged += new System.EventHandler(this.comboBox_toastPosition_SelectedIndexChanged);
+            // 
             // Options
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -605,5 +647,8 @@
         private System.Windows.Forms.Button button_selectTextColor;
         private System.Windows.Forms.Button button_selectColor;
         private System.Windows.Forms.Button button_selectBarColor;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textBox_toastStickTime;
+        private System.Windows.Forms.ComboBox comboBox_toastPosition;
     }
 }
