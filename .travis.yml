@@ -1,12 +1,8 @@
-language: csharp
-solution: ToastTest.sln
-matrix:
-  include:
-    # Ubuntu 16.04
-    - os: linux
-      dist: xenial
-      sudo: required
-    # Ubuntu 14.04
-    - os: linux
-      dist: trusty
-      sudo: required
+language: node_js
+sudo: false
+node_js:
+  - "10.0.0"
+install:
+  - npm install
+script:
+- npm test
