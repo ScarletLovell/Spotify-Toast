@@ -1,0 +1,76 @@
+#song #albumart {
+    position: fixed;
+    top: 2px;
+    left: 2px;
+    right: 0px;
+    bottom: 0px;
+    height: 62px;
+    width: 62px;
+}
+#song #albumart #song_albumart {
+    height: 62px;
+    width: 62px;
+}
+#song #albumart #border {
+    position: fixed;
+    top: 2px;
+    left: 2px;
+    right: 0px;
+    bottom: 0px;
+    height: 55px;
+    width: 55px;
+    border: 3.5px;
+    border-style: solid;
+    border-color: white;
+}
+#song #song_name {
+    position: fixed;
+    overflow-wrap: break-word;
+    white-space: nowrap;
+    top: -10%;
+    left: 35%;
+    right: 0px;
+    bottom: 0px;
+    font-size: 18px;
+    font-family: Arial;
+}
+#song #song_artist {
+    position: fixed;
+    overflow-wrap: break-word;
+    white-space: nowrap;
+    top: 23%;
+    left: 35%;
+    right: 0px;
+    bottom: 0px;
+    font-size: 12px;
+    font-family: Arial;
+}
+
+#plays {
+    position: fixed;
+    top: -11px;
+    left: 235px;
+    right: 0px;
+    bottom: 0px;
+    font-family: Arial;
+    font-size: 10px;
+}
+#version {
+    position: fixed;
+    top: 25px;
+    left: 250px;
+    right: 0px;
+    bottom: 0px;
+    font-family: Arial;
+    font-size: 13px;
+}
+#progress {
+    position: fixed;
+    width: 100%;
+    top: 66px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    text-align: center;
+    height: 10px;
+}
