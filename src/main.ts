@@ -1,29 +1,22 @@
 // Spotify-Toast - http://www.github.com/Ashleyz4/Spotify-Toast
 
-
+export { }
 const path = require('path'),
-    glob = require('glob'),
-    {app, BrowserWindow} = require('electron');
+    glob = require('glob');
 
-// @ts-ignore
-var ipc = require('electron').ipcMain;
-ipc.on('errorInWindow', (event, data) => {
-    if(data && {}.toString.call(data) === '[object Object]') {
-        console.log("R_E: " + JSON.stringify(data));
-    } else {
-        console.log("R_E: "+data);
-    }
+const {app, BrowserWindow} = require('electron');
+
+const ipcMain = require('electron').ipcMain;
+ipcMain.on('error', function(event, c) {
+    console.log(c);
 });
-ipc.on('logInWindow', (event, data) => {
-    if(data && {}.toString.call(data) === '[object Object]') {
-        console.log("R_L: " + JSON.stringify(data));
-    } else {
-        console.log("R_L: "+data);
-    }
+ipcMain.on('log', function(event, c) {
+    console.log(c);
 });
-ipc.on('blankString', (event, data) => {
-    console.log("");
+ipcMain.on('blank', function(event, c) {
+    console.log(" ");
 });
+  
 
 // @ts-ignore
 if(process.mas)
@@ -37,6 +30,10 @@ function init() {
             width: 292,
             height: 72,
             title: "Spotify-Toast"
+        }
+        if (process.platform === 'linux') {
+            // @ts-ignore
+            windowOptions.icon = path.join(__dirname, '/spotify-icon.ico');
         }
         mainWindow = new BrowserWindow(windowOptions);
         mainWindow.setResizable(false);

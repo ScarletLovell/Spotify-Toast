@@ -1,0 +1,6 @@
+{
+    "name": "spotify-toast",
+    "productName": "Spotify Toast",
+    "description": "Spotify-Toast but made in Node.JS",
+    "version": "0.1.6"
+}

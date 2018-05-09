@@ -1,0 +1,15 @@
+console.log(" ");
+console.log(" ");
+console.log(" ");
+console.log(" ");
+console.log("Showing help for Spotify-Toast");
+console.log(" ");
+console.log("\t\x1b[36mnpm start\x1b[0m                             - Starts NPM app");
+console.log("\t\x1b[36mnpm run help\x1b[0m                          - Shows this");
+console.log("\t\x1b[36mnpm run make-zip\x1b[0m                      - Makes zip file with app");
+console.log("\t\x1b[36mnpm run make-(linux-deb OR linux-rpm)\x1b[0m - Package linux app");
+console.log("\t\x1b[36mnpm run make-mac\x1b[0m                      - Package mac app");
+console.log(" ");
+console.log(" ");
+console.log(" ");
+console.log(" ");

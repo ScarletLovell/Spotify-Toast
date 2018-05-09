@@ -36,7 +36,7 @@ const DEFAULT_PORT = 4381,
 async function getJson(url, params, headers, cb) {
     if (params instanceof Function) {
         cb = params;
-        params = null;
+        var params = null;
         headers = null;
     }
 
@@ -230,7 +230,7 @@ function SpotifyWebHelper(opts) {
           return cb(err);
         }
 
-        params = {
+        var params = {
           'oauth': self.oauthToken,
           'csrf': self.csrfToken,
         }
@@ -246,10 +246,10 @@ function SpotifyWebHelper(opts) {
 
     // added by ashleyz4
     this.getAlbumArt = (id, returnAfter) => {
+        var cb = null;
         if (returnAfter instanceof Function) {
             cb = returnAfter;
             returnAfter = null;
-            returnOn = null;
         } else {
             return;
         }
@@ -257,7 +257,7 @@ function SpotifyWebHelper(opts) {
             if (err) {
               return cb(err, null);
             }
-            params = {
+            var params = {
                 "url": id,
                 //'oauth': self.oauthToken,
                 //'csrf': self.csrfToken
@@ -283,7 +283,7 @@ function SpotifyWebHelper(opts) {
 
         cb = cb || function() {};
 
-        params = {
+        var params = {
           'returnafter': returnAfter,
           'returnon': returnOn.join(',')
         }
@@ -294,7 +294,7 @@ function SpotifyWebHelper(opts) {
     this.pause = function (cb) {
       cb = cb || function() {};
 
-      params = {
+      var params = {
         'pause' : true
       }
 
@@ -304,7 +304,7 @@ function SpotifyWebHelper(opts) {
     this.unpause = function (cb) {
       cb = cb || function () { };
 
-      params = {
+      var params = {
         'pause': false
       }
 
@@ -314,7 +314,7 @@ function SpotifyWebHelper(opts) {
     this.play = function (spotifyUri, cb) {
       cb = cb || function () { };
 
-      params = {
+      var params = {
         'uri': spotifyUri,
         'context': spotifyUri
      }
