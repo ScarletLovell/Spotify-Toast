@@ -20,12 +20,12 @@ How do you open the options menu via Toast Mode? Double click the purple icon in
 * ~~Make an option for an actual toast to show up on screen when song changes~~ - done
 * Make the app better looking in general
 * ~~Make the app work on Linux~~ - done
-* Fixing any [issues](https://github.com/Anthonyrules144/Spotify-Toast/issues) that the application has
+* Fixing any [issues](https://github.com/Ashleyz4/Spotify-Toast/issues) that the application has
 
 #
-If you have an issue with this, please post in the [issues](https://github.com/Anthonyrules144/Spotify-Toast/issues) tab
+If you have an issue with this, please post in the [issues](https://github.com/Ashleyz4/Spotify-Toast/issues) tab
 
-If you would like to download the latest exe, it can be found [in the downloads](https://github.com/Anthonyrules144/Spotify-Toast/releases) section
+If you would like to download the latest exe, it can be found [in the downloads](https://github.com/Ashleyz4/Spotify-Toast/releases) section
 
 ### Interested in the source code?
 I used SpotifyAPI-Net, you can find it [here](https://github.com/johnnycrazy/SpotifyAPI-NET)<br/>
